@@ -37,6 +37,7 @@ repository:
 		patterns: [
 			{include: "#comment"}
 			{include: "#substitution"}
+			{include: "#transliteration"}
 			{include: "#addresses"}
 			{include: "#braces"}
 			{include: "#commands"}
@@ -237,6 +238,71 @@ repository:
 				{include: "#escape"}
 			]
 		}]
+
+
+	# y/ … / … /
+	transliteration:
+		patterns: [{
+			# Absurd (yet valid) form using dash as a delimiter
+			name: "meta.transliteration.source.sed"
+			begin: "(y)(-)"
+			end:   "(-)|$"
+			beginCaptures:
+				1: name: "keyword.control.command.source.sed"
+				2: name: "punctuation.delimiter.transliteration.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.transliteration.end.source.sed"
+			patterns: [{
+				# First range
+				begin: "\\G"
+				end:   "-|(?=$)"
+				contentName: "string.quoted.double.source-characters.source.sed"
+				endCaptures:
+					0: name: "punctuation.delimiter.transliteration.middle.source.sed"
+				patterns: [include: "#escape"]
+			},{
+				# Second range
+				begin: "(?<=-)"
+				end:   "(?=$|-)"
+				contentName: "string.quoted.double.destination-characters.source.sed"
+				patterns: [include: "#escape"]
+			}, include: "#escape"]
+		},{
+			# Using a sane delimiter
+			name:  "meta.transliteration.source.sed"
+			begin: "y"
+			end:   "$|(?<!\\G)(?=.)|(?<=^)"
+			beginCaptures:
+				0: name: "keyword.control.command.source.sed"
+			patterns: [{
+				# First range
+				begin: "\\G(.)"
+				end:   "-?(?=\\1|$)"
+				contentName: "string.quoted.double.source-characters.source.sed"
+				beginCaptures: 1: name: "punctuation.delimiter.substitution.begin.source.sed"
+				endCaptures:   0: name: "string.quoted.double.source-characters.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			},{
+				# Second range
+				begin: "(.)"
+				end:   "(-)?(\\1)|(?=$)"
+				contentName: "string.quoted.double.replacement.source.sed"
+				beginCaptures:
+					1: name: "punctuation.delimiter.transliteration.middle.source.sed"
+				endCaptures:
+					1: name: "string.quoted.double.replacement.source.sed"
+					2: name: "punctuation.delimiter.transliteration.end.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			}]
+		}]
+
+	"transliteration.ranges":
+		patterns: [
+			{match: "\\G-"}
+			{match: "-", name: "keyword.operator.range.dash.source.sed"}
+			{include: "#escape"}
+		]
+
 
 	# Modifiers for the substitute command
 	flags:
