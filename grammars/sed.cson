@@ -52,43 +52,85 @@ repository:
 		patterns: [{
 			# Escaped newline
 			name:  "constant.character.escape.newline.source.sed"
-			begin: "(\\\\)$\\s*"
+			begin: "\\\\$\\s*"
 			end:   "^"
-			beginCaptures:
-				1: name: "punctuation.definition.escape.backslash.source.sed"
 		},{
 			# Anything else
 			name:  "constant.character.escape.source.sed"
-			match: "(\\\\)."
-			captures:
-				1: name: "punctuation.definition.escape.backslash.source.sed"
+			match: "\\\\."
 		}]
+
+	# Regular expressions
+	regexp:
+		patterns: [
+			{match: "\\^", name: "keyword.operator.anchor.line-start.source.sed"}
+			{match: "\\$", name: "keyword.operator.anchor.line-end.source.sed"}
+			{match: "\\*", name: "keyword.operator.quantifier.source.sed"}
+			{include: "#regexp.bracketExpression"}
+			{include: "#escape"}
+		]
+
+	# Bracket expression: [^a-f\d]
+	"regexp.bracketExpression":
+		name: "string.regexp.character-class.source.sed"
+		begin: "\\["
+		end:   "\\]|(?=$)"
+		beginCaptures: 0: name: "punctuation.definition.character-class.begin.source.sed"
+		endCaptures:   0: name: "punctuation.definition.character-class.end.source.sed"
+		patterns: [{
+			# Negation
+			name: "keyword.operator.logical.not.source.sed"
+			match: "\\G\\^"
+		},{
+			# Ignore a closing bracket if it's listed first
+			match: "\\G\\]"
+		},{
+			# Dash separating two halves of a range expression
+			name: "punctuation.separator.range.dash.source.sed"
+			match: "(?<!\\G)-(?!$|\\])"
+		},{
+			# Named character classes [:alnum:]
+			name:  "constant.language.named.character-class.source.sed"
+			match: "(\\[:)(?:(alnum|alpha|blank|cntrl|digit|graph|lower|print|punct|space|upper|xdigit)|(.*?))(\\:])"
+			captures:
+				1: name: "punctuation.definition.character-class.begin.source.sed"
+				2: name: "support.constant.posix-class.source.sed"
+				3: name: "invalid.illegal.unknown.character-class.source.sed"
+				4: name: "punctuation.definition.character-class.end.source.sed"
+		},{
+			# Collating symbols
+			name:  "constant.language.collating-symbol.source.sed"
+			begin: "\\[\\."
+			end:   "\\.\\]|(?=$)"
+			beginCaptures: 0: name: "punctuation.definition.collating-symbol.begin.source.sed"
+			endCaptures:   0: name: "punctuation.definition.collating-symbol.end.source.sed"
+		}, include: "#escape"]
+		
 
 	# s/ … / … /
 	substitution:
 		name:  "meta.substitution.source.sed"
 		begin: "s"
-		end:   "$|\\s"
+		end:   "$|(?=\\s)|(?<=^)"
 		beginCaptures:
 			0: name: "keyword.control.command.source.sed"
 		patterns: [{
-			contentName: "meta.substitution.search-pattern.source.sed"
 			begin: "\\G(.)"
-			end:   "(?=\\1)|$"
+			end:   "(?=\\1|$)"
+			contentName:  "string.regexp.substitution.search.source.sed"
 			beginCaptures:
 				1: name: "punctuation.delimiter.substitution.begin.source.sed"
-			patterns: [
-				{include: "#escape"}
-			]
+			patterns: [include: "#regexp"]
 		},{
-			contentName: "meta.substitution.replacement.source.sed"
 			begin: "(.)"
-			end:   "(\\1)([gp0-9eIiMm]*)"
+			end:   "(\\1)(?:([gp0-9eIiMm]+)|(\\S+))?|(?=$)"
+			contentName: "string.quoted.double.replacement.source.sed"
 			beginCaptures:
 				1: name: "punctuation.delimiter.substitution.middle.source.sed"
 			endCaptures:
 				1: name: "punctuation.delimiter.substitution.end.source.sed"
 				2: name: "meta.substitution.flags.source.sed", patterns: [include: "#flags"]
+				3: name: "invalid.illegal.unknown.flag.source.sed"
 			patterns: [
 				{include: "#escape"}
 			]
