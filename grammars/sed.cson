@@ -75,6 +75,8 @@ repository:
 			{match: "\\^", name: "keyword.operator.anchor.line-start.source.sed"}
 			{match: "\\$", name: "keyword.operator.anchor.line-end.source.sed"}
 			{match: "\\*", name: "keyword.operator.quantifier.source.sed"}
+			{match: "\\\\?\\(", name: "constant.language.group.begin.source.sed"}
+			{match: "\\\\?\\)", name: "constant.language.group.end.source.sed"}
 			{include: "#regexp.bracketExpression"}
 			{include: "#escape"}
 		]
