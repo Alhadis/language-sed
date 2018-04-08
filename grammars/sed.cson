@@ -268,16 +268,26 @@ repository:
 	# Regular expressions
 	regexp:
 		patterns: [
-			{match: "\\.",      name: "constant.character.wildcard.dot.match.any.source.sed"}
-			{match: "\\^",      name: "keyword.operator.anchor.line-start.source.sed"}
-			{match: "\\$",      name: "keyword.operator.anchor.line-end.source.sed"}
-			{match: "\\*",      name: "keyword.operator.quantifier.source.sed"}
+			# There's no fully reliable *and* consistent way of scoping these characters.
+			# Because of syntax conflicts between basic (BRE) and extended (ERE) expressions,
+			# a sequence like `\(` might be a group (if BRE), or an escaped/literal bracket
+			# if ERE. There's no way of knowing which flavour is in use from a grammar, so
+			# our best bet is to just assume. Nice, huh?
+			{match: "\\.",      name: "constant.language.wildcard.dot.match.any.source.sed"}
+			{match: "\\^",      name: "constant.language.anchor.line-start.source.sed"}
+			{match: "\\$",      name: "constant.language.anchor.line-end.source.sed"}
+			{match: "\\*",      name: "constant.language.quantifier.min-0.source.sed"}
+			{match: "\\\\?\\+", name: "constant.language.quantifier.min-1.source.sed"}
+			{match: "\\\\?\\?", name: "constant.language.quantifier.max-1.source.sed"}
+			{match: "\\\\?\\|", name: "constant.language.alternation.disjunction.source.sed"}
 			{match: "\\\\?\\(", name: "constant.language.group.begin.source.sed"}
 			{match: "\\\\?\\)", name: "constant.language.group.end.source.sed"}
-			{match: "\\\\[Ll]", name: "keyword.operator.lowercase.conversion.gnu.source.sed"}
-			{match: "\\\\[Uu]", name: "keyword.operator.uppercase.conversion.gnu.source.sed"}
-			{match: "\\\\E",    name: "keyword.operator.end.conversion.gnu.source.sed"}
+			{include: "#reference"}
+			{include: "#regexp.miscEscapes"}
+			{include: "#regexp.quantiferRanges"}
 			{include: "#regexp.bracketExpression"}
+			{include: "#regexp.gnuCharacterEscapes"}
+			{include: "#regexp.gnuEscapes"}
 			{include: "#escape"}
 		]
 
@@ -325,7 +335,74 @@ repository:
 			endCaptures:   0: name: "punctuation.definition.equivalence-class.end.source.sed"
 			patterns: [include: "#escape"]
 		}, include: "#escape"]
-	
+
+	"regexp.gnuCharacterEscapes":
+		patterns: [
+			{match: "\\\\a",  name: "constant.character.escape.alert.gnu.source.sed"}
+			{match: "\\\\f",  name: "constant.character.escape.form-feed.gnu.source.sed"}
+			{match: "\\\\r",  name: "constant.character.escape.carriage-return.gnu.source.sed"}
+			{match: "\\\\t",  name: "constant.character.escape.tab.gnu.source.sed"}
+			{match: "\\\\v",  name: "constant.character.escape.vertical-tab.gnu.source.sed"}
+			{match: "\\\\c.", name: "constant.character.escape.control-x.gnu.source.sed"}
+			{match: "\\\\d[0-9]{3}", name: "constant.character.escape.decimal.codepoint.gnu.source.sed"}
+			{match: "\\\\o[0-7]{3}", name: "constant.character.escape.octal.codepoint.gnu.source.sed"}
+			{match: "\\\\x[0-9A-Fa-f]{2}", name: "constant.character.escape.hex.codepoint.gnu.source.sed"}
+		]
+
+	"regexp.gnuEscapes":
+		patterns: [
+			{match: "\\\\[Ll]", name: "keyword.operator.lowercase.conversion.gnu.source.sed"}
+			{match: "\\\\[Uu]", name: "keyword.operator.uppercase.conversion.gnu.source.sed"}
+			{match: "\\\\E",    name: "keyword.operator.end.conversion.gnu.source.sed"}
+			{match: "\\\\w",    name: "constant.language.word-character.gnu.source.sed"}
+			{match: "\\\\W",    name: "constant.language.word-character.negated.gnu.source.sed"}
+			{match: "\\\\b",    name: "constant.language.word-boundary.gnu.source.sed"}
+			{match: "\\\\B",    name: "constant.language.word-boundary.negated.gnu.source.sed"}
+			{match: "\\\\s",    name: "constant.language.whitespace-character.gnu.source.sed"}
+			{match: "\\\\S",    name: "constant.language.whitespace-character.negated.gnu.source.sed"}
+			{match: "\\\\<",    name: "constant.language.anchor.beginning-of-word.gnu.source.sed"}
+			{match: "\\\\>",    name: "constant.language.anchor.end-of-word.gnu.source.sed"}
+			{match: "\\\\`",    name: "constant.language.anchor.start-of-pattern.gnu.source.sed"}
+			{match: "\\\\'",    name: "constant.language.anchor.end-of-pattern.gnu.source.sed"}
+		]
+
+	"regexp.miscEscapes":
+		patterns: [
+			{match: "\\\\\\$", name: "constant.character.escape.dollar-sign.source.sed"}
+			{match: "\\\\\\*", name: "constant.character.escape.asterisk.source.sed"}
+			{match: "\\\\\\.", name: "constant.character.escape.dot.period.source.sed"}
+			{match: "\\\\\\[", name: "constant.character.escape.square.bracket.source.sed"}
+			{match: "\\\\{2}", name: "constant.character.escape.backslash.source.sed"}
+			{match: "\\\\\\^", name: "constant.character.escape.caret.source.sed"}
+		]
+
+	"regexp.quantiferRanges":
+		patterns: [{
+			name:  "meta.escaped.quantifier.specific.range.source.sed"
+			match: "(\\\\{)([0-9]+)(?:(,)([0-9]+)?)?(\\\\})"
+			captures:
+				1: name: "punctuation.definition.quantifier.bracket.curly.begin.source.sed"
+				2: name: "constant.numeric.integer.source.sed"
+				3: name: "punctuation.separator.range.comma.source.sed"
+				4: name: "constant.numeric.integer.source.sed"
+				5: name: "punctuation.definition.quantifier.bracket.curly.end.source.sed"
+		},{
+			name:  "meta.unescaped.quantifier.specific.range.source.sed"
+			match: "({)([0-9]+)(?:(,)([0-9]+)?)?(})"
+			captures:
+				1: name: "punctuation.definition.quantifier.bracket.curly.begin.source.sed"
+				2: name: "constant.numeric.integer.source.sed"
+				3: name: "punctuation.separator.range.comma.source.sed"
+				4: name: "constant.numeric.integer.source.sed"
+				5: name: "punctuation.definition.quantifier.bracket.curly.end.source.sed"
+		}]
+
+
+	# Backreference to a capturing group: \1 … \9
+	reference:
+		name: "variable.language.reference.source.sed"
+		match: "\\\\[0-9]"
+
 	
 	# Command ; separator
 	semicolon:
@@ -446,8 +523,8 @@ repository:
 
 	"replacement.innards":
 		patterns: [
-			{match: "\\\\[0-9]", name: "variable.language.reference.source.sed"}
 			{match: "&",         name: "variable.language.input.source.sed"}
+			{include: "#reference"}
 			{include: "#escape"}
 		]
 

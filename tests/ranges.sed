@@ -71,4 +71,39 @@ v 2.0.0
 6,
 
 s/aaa/bbb/w filename
-s/aaa/bbb/e echo;
+s/a|b|new \n li\[n\*e/xyz/
+s/(aaa)\1(bbb)\{2,1\}/b\1bb/e echo;
+
+# BRE examples
+/abcdef/
+/a*b/
+/a\?b/
+/a\+b\+/
+/.*/
+/.\+/
+/^main.*(.*)/
+/^#/
+/\\$/
+/\$/
+/[a-zA-Z0-9]/
+/[^ 	]\+/
+/^\(.*\)\n\1$/
+/.\{9\}A$/
+/^.\{15\}A/
+
+# ERE examples
+/abc\?/
+/c+/
+/a{3,}/
+/(abc){2,3}/
+/(abc*)\1/
+/a|b/
+/[\*]/
+
+# Extensions
+s/\w/X/g
+s/\W/X/g
+s/\b/X/g
+s/\B/x/g
+s/\s//g
+s/\t//
