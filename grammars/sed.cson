@@ -274,7 +274,7 @@ repository:
 			# Absurd delimiter #1: Space
 			name:  "meta.transliteration.space-delimiter.source.sed"
 			begin: "(y)( )"
-			end:   "( )([^;}]*)|$"
+			end:   "( )([^#;}]*)|$"
 			beginCaptures:
 				1: name: "keyword.control.command.source.sed"
 				2: name: "punctuation.delimiter.whitespace.begin.source.sed"
@@ -303,7 +303,7 @@ repository:
 			# Absurd delimiter #2: Tab
 			name:  "meta.transliteration.tab-delimiter.source.sed"
 			begin: "(y)(\\t)"
-			end:   "(\\t)([^;}]*)|$"
+			end:   "(\\t)([^#;}]*)|$"
 			beginCaptures:
 				1: name: "keyword.control.command.source.sed"
 				2: name: "punctuation.delimiter.whitespace.begin.source.sed"
@@ -332,7 +332,7 @@ repository:
 			# Absurd delimiter #3: Semicolon
 			name:  "meta.transliteration.semicolon-delimiter.source.sed"
 			begin: "(y)(;)"
-			end:   "(;)([^;}]*)|$"
+			end:   "(;)([^#;}]*)|$"
 			beginCaptures:
 				1: name: "keyword.control.command.source.sed"
 				2: name: "punctuation.delimiter.pattern.begin.source.sed"
@@ -361,7 +361,7 @@ repository:
 			# Absurd delimiter #4: Closing brace
 			name:  "meta.transliteration.brace-delimiter.source.sed"
 			begin: "(y)(})"
-			end:   "(})([^;}]*)|$"
+			end:   "(})([^#;}]*)|$"
 			beginCaptures:
 				1: name: "keyword.control.command.source.sed"
 				2: name: "punctuation.delimiter.pattern.begin.source.sed"
@@ -387,10 +387,39 @@ repository:
 				patterns: [include: "#transliteration.ranges"]
 			}, include: "#escape"]
 		},{
-			# Absurd delimiter #5: Dash
+			# Absurd delimiter #5: Pounds/number-signs
+			name:  "meta.transliteration.pound-delimiter.source.sed"
+			begin: "(y)(#)"
+			end:   "(#)([^#;}]*)|$"
+			beginCaptures:
+				1: name: "keyword.control.command.source.sed"
+				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.pattern.end.source.sed"
+				2: name: "invalid.illegal.extra-characters.source.sed"
+			patterns: [{
+				name:  "meta.source-characters.source.sed"
+				begin: "\\G"
+				end:   "(-)?(#)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					1: name: "string.quoted.double.source.sed"
+					2: name: "punctuation.delimiter.pattern.middle.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			},{
+				name:  "meta.replacement-characters.source.sed"
+				begin: "(?<=#)"
+				end:   "(?!\\G)-?(?=#)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					0: name: "string.quoted.double.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			}, include: "#escape"]
+		},{
+			# Absurd delimiter #6: Dash
 			name:  "meta.transliteration.dash-delimiter.source.sed"
 			begin: "(y)(-)"
-			end:   "(-)([^;}]*)|$"
+			end:   "(-)([^#;}]*)|$"
 			beginCaptures:
 				1: name: "keyword.control.command.source.sed"
 				2: name: "punctuation.delimiter.pattern.begin.source.sed"
@@ -418,7 +447,7 @@ repository:
 			# Using a sane delimiter
 			name:  "meta.transliteration.source.sed"
 			begin: "y"
-			end:   "$|(?=[\\s;}])|(?<=^)"
+			end:   "$|(?=[\\s#;}])|(?<=^)"
 			beginCaptures:
 				0: name: "keyword.control.command.source.sed"
 			patterns: [{
@@ -436,7 +465,7 @@ repository:
 				# Second range
 				name:  "meta.replacement-characters.source.sed"
 				begin: "(.)"
-				end:   "(-)?(\\1)([^;}]*+)|(?=$)"
+				end:   "(-)?(\\1)([^#;}]*+)|(?=$)"
 				contentName: "string.quoted.double.source.sed"
 				beginCaptures:
 					1: name: "punctuation.delimiter.pattern.middle.source.sed"
