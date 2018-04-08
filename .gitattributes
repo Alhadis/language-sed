@@ -1,0 +1,6 @@
+# Mark samples as illustrative only
+/tests/* linguist-documentation
+
+# Exclude unnecessary files from distribution
+/preview.png export-ignore
+/tests/* export-ignore
