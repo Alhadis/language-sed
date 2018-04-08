@@ -1,9 +1,9 @@
 #!/usr/bin/env gsed -f
 
 stupidly delimited shit
-s\abc\123\g
-s;abc;123;;p
-s}abc}123};p
+s\a;#c\1;#3\g
+s;a#bc;12#3;;p
+s}a;#c}1;#3};p
 
 s	[abc]	xyz	;p
 s	[a-c]	xyz	;p

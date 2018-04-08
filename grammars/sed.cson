@@ -511,7 +511,7 @@ repository:
 			},{
 				name:  "meta.replacement.source.sed"
 				begin: "([^;#}])"
-				end:   "(\\1)([^;#}]*+)|(?=$|[;#}])"
+				end:   "(\\1)([^;#}]*+)|(?=$)"
 				contentName: "string.quoted.double.source.sed"
 				beginCaptures:
 					1: name: "punctuation.delimiter.pattern.middle.source.sed"
@@ -524,7 +524,7 @@ repository:
 
 	"replacement.innards":
 		patterns: [
-			{match: "&",         name: "variable.language.input.source.sed"}
+			{match: "&", name: "variable.language.input.source.sed"}
 			{include: "#reference"}
 			{include: "#escape"}
 		]
