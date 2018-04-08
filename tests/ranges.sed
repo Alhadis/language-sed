@@ -50,3 +50,12 @@ y/abc\/xyz/123/-
 2a\
 hello\
 world
+
+e echo foo\
+bar; printf
+
+Q 42
+
+R/filename/
+
+v 2.0.0
