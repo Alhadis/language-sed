@@ -259,6 +259,7 @@ repository:
 			name:  "meta.insertion.gnu.source.sed"
 			begin: "[aic]"
 			end:   "$"
+			contentName: "string.unquoted.herestring.source.sed"
 			beginCaptures:
 				0: name: "keyword.control.insertion.command.source.sed"
 			patterns: [include: "#escape"]
