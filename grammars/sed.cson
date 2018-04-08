@@ -4,7 +4,7 @@ fileTypes: ["sed"]
 firstLineMatch: """(?x)
 	# Hashbang
 	^\\#!.*(?:\\s|\\/|(?<=!)\\b)
-		sed
+		(?:(?:g|s|mini)?sed)
 	(?:$|\\s)
 	|
 	# Modeline
