@@ -69,13 +69,25 @@ repository:
 		}]
 		
 	
-	# Comment lines like this one
+	# Lines beginning with a number-sign
 	comment:
-		name:  "comment.line.number-sign.source.sed"
-		begin: "#"
-		end:   "$"
-		beginCaptures:
-			0: name: "punctuation.definition.comment.source.sed"
+		patterns: [{
+			# Special "directive" to force use of the `-n` switch
+			begin: "\\A(#)n"
+			end:   "$"
+			beginCaptures:
+				0: name: "keyword.control.directive.no-autoprint.source.sed"
+				1: name: "punctuation.definition.directive.source.sed"
+			contentName: "comment.line.number-sign.source.sed"
+		},{
+			# Ordinary comments like this one
+			name:  "comment.line.number-sign.source.sed"
+			begin: "#"
+			end:   "$"
+			beginCaptures:
+				0: name: "punctuation.definition.comment.source.sed"
+		}]
+
 
 	# Backslash-escaped character
 	escape:
