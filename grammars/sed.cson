@@ -37,7 +37,37 @@ repository:
 		patterns: [
 			{include: "#comment"}
 			{include: "#substitution"}
+			{include: "#addresses"}
 		]
+	
+	# Regular expression addresses
+	addresses:
+		patterns: [{
+			# /regexp/
+			name:  "meta.address.source.sed"
+			begin: "/"
+			end:   "(/)([IM]*)|$"
+			beginCaptures:
+				0: name: "punctuation.delimiter.address.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.address.end.source.sed"
+				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
+			contentName: "string.regexp.address.source.sed"
+			patterns: [include: "#regexp"]
+		},{
+			# \%regexp%
+			name: "meta.address.custom-delimiter.source.sed"
+			begin: "\\\\(.)"
+			end:   "(\\1)([IM]*)|$"
+			beginCaptures:
+				0: name: "punctuation.delimiter.address.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.address.end.source.sed"
+				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
+			contentName: "string.regexp.address.source.sed"
+			patterns: [include: "#regexp"]
+		}]
+		
 	
 	# Comment lines like this one
 	comment:
@@ -147,7 +177,7 @@ repository:
 				1: name: "punctuation.delimiter.substitution.middle.source.sed"
 			endCaptures:
 				1: name: "punctuation.delimiter.substitution.end.source.sed"
-				2: name: "meta.substitution.flags.source.sed", patterns: [include: "#flags"]
+				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
 				3: name: "invalid.illegal.unknown.flag.source.sed"
 			patterns: [
 				{include: "#escape"}
