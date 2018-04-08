@@ -63,8 +63,12 @@ v 2.0.0
 12 , 34 ! p
 
 623 , /regexp/
+/start/,/stop/ s/#.*//
 
 6 , ~ 2 ! p
 
 6,~2!p
 6,
+
+s/aaa/bbb/w filename
+s/aaa/bbb/e echo;
