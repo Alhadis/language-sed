@@ -94,15 +94,53 @@ repository:
 	# Single-letter commands
 	commands:
 		patterns: [
-			{match: "d", name: "keyword.control.delete.command.source.sed"}
-			{match: "p", name: "keyword.control.print.command.source.sed"}
-			{match: "n", name: "keyword.control.skip.command.source.sed"}
-			
-			# Quit sed with optional exit status
-			match: "(q)(?:\\s*([0-9]+))?"
-			captures:
-				1: name: "keyword.control.quit.command.source.sed"
-				2: name: "variable.parameter.exit-code.gnu.source.sed"
+			{match: "[Dd]", name: "keyword.control.delete.command.source.sed"}
+			{match: "[Pp]", name: "keyword.control.print.command.source.sed"}
+			{match: "[Hh]", name: "keyword.control.replace-hold.command.source.sed"}
+			{match: "[Gg]", name: "keyword.control.replace-pattern.command.source.sed"}
+			{match: "x",    name: "keyword.control.exchange.command.source.sed"}
+			{match: "n",    name: "keyword.control.skip.command.source.sed"}
+			{match: "N",    name: "keyword.control.print.newline.source.sed"}
+			{match: "=",    name: "keyword.control.print.line-number.source.sed"}
+			{
+				# Print pattern space unambiguously
+				match: "(l)(?:\\s*([0-9]+))?"
+				captures:
+					1: name: "keyword.control.print.unambiguously.source.sed"
+					2: name: "variable.parameter.line-length.gnu.source.sed"
+			},{
+				# Quit sed with optional exit status
+				match: "(q)(?:\\s*([0-9]+))?"
+				captures:
+					1: name: "keyword.control.quit.command.source.sed"
+					2: name: "variable.parameter.exit-code.gnu.source.sed"
+			},{
+				# Read contents of file
+				match: "(r)\\s*(\\S.*)$"
+				captures:
+					1: name: "keyword.control.read.file.command.source.sed"
+					2: name: "string.unquoted.filename.source.sed"
+			},{
+				# Write to filename
+				match: "(w)\\s*(\\S.*)$"
+				captures:
+					1: name: "keyword.control.write.file.command.source.sed"
+					2: name: "string.unquoted.filename.source.sed"
+			},{
+				# Define location of label for branching
+				name:  "meta.label.source.sed"
+				match: "(:)\\s*([^\\s;#}]+)"
+				captures:
+					1: name: "storage.type.function.label.source.sed"
+					2: name: "entity.name.function.label.source.sed"
+			},{
+				# Branch to label
+				name:  "meta.branch.source.sed"
+				match: "([bt])(?:\\s*([^\\s;#}]+))?"
+				captures:
+					1: name: "keyword.control.branch.source.sed"
+					2: name: "entity.name.function.label.source.sed"
+			}
 		]
 	
 	
