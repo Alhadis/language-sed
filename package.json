@@ -2,6 +2,9 @@
 	"name": "language-sed",
 	"version": "v0.0.0",
 	"description": "Syntax highlighting for `sed` scripts.",
+	"keywords": ["sed", "stream", "editor", "awk", "perl", "grep", "unix", "regexp"],
+	"repository": "https://github.com/Alhadis/language-sed",
+	"author": "Alhadis <gardnerjohng@gmail.com>",
 	"license": "ISC",
-	"author": "John Gardner <gardnerjohng@gmail.com>"
+	"engines": {"atom": "*"}
 }
