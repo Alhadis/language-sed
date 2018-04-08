@@ -1,0 +1,24 @@
+#!/usr/bin/env gsed -f
+
+stupidly delimited shit
+s\abc\123\g
+s;abc;123;;p
+s}abc}123};p
+
+s	[abc]	xyz	;p
+s	[a-c]	xyz	;p
+s	[-bc]	-yz	;p
+s	[ab-]	xy-	;p
+s	[a--]	x--	;p
+s	[--c]	--z	;p
+s	[a--]	x--	;p
+s	[---]	---	;p
+
+s [abc] xyz ;p
+s [a-c] x-z ;p
+s [-bc] -yz ;p
+s [ab-] xy- ;p
+s [a--] x-- ;p
+s [--c] --z ;p
+s [a--] x-- ;p
+s [---] --- ;p
