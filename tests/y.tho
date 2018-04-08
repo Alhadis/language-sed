@@ -1,0 +1,24 @@
+#!/usr/bin/env gsed -f
+
+# Idiotic delimiter choices
+y\abc\123\
+y;abc;123;;p
+y}abc}123};p
+
+y	abc	xyz	;p
+y	a-c	x-z	;p
+y	-bc	-yz	;p
+y	ab-	xy-	;p
+y	a--	x--	;p
+y	--c	--z	;p
+y	a--	x--	;p
+y	---	---	;p
+
+y abc xyz ;p
+y a-c x-z ;p
+y -bc -yz ;p
+y ab- xy- ;p
+y a-- x-- ;p
+y --c --z ;p
+y a-- x-- ;p
+y --- --- ;p

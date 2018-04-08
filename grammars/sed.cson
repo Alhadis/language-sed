@@ -244,16 +244,16 @@ repository:
 			end:   "(?=\\1|$)"
 			contentName:  "string.regexp.substitution.search.source.sed"
 			beginCaptures:
-				1: name: "punctuation.delimiter.substitution.begin.source.sed"
+				1: name: "punctuation.delimiter.pattern.begin.source.sed"
 			patterns: [include: "#regexp"]
 		},{
 			begin: "(.)"
 			end:   "(\\1)(?:([gp0-9eIiMm]+)|(\\S+))?|(?=$)"
 			contentName: "string.quoted.double.replacement.source.sed"
 			beginCaptures:
-				1: name: "punctuation.delimiter.substitution.middle.source.sed"
+				1: name: "punctuation.delimiter.pattern.middle.source.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.substitution.end.source.sed"
+				1: name: "punctuation.delimiter.pattern.end.source.sed"
 				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
 				3: name: "invalid.illegal.unknown.flag.source.sed"
 			patterns: [
@@ -267,55 +267,183 @@ repository:
 	# y/ … / … /
 	transliteration:
 		patterns: [{
-			# Absurd (yet valid) form using dash as a delimiter
-			name: "meta.transliteration.source.sed"
-			begin: "(y)(-)"
-			end:   "(-)|$"
+			# Idiotic/invalid use of whitespace delimiters
+			name:  "invalid.illegal.syntax.transliteration.source.sed"
+			match: "y {2}[^ ]*(?: |$)|y\\t{2}[^\\t]*(?:\\t|$)"
+		},{
+			# Absurd delimiter #1: Space
+			name:  "meta.transliteration.space-delimiter.source.sed"
+			begin: "(y)( )"
+			end:   "( )([^;}]*)|$"
 			beginCaptures:
 				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.transliteration.begin.source.sed"
+				2: name: "punctuation.delimiter.whitespace.begin.source.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.transliteration.end.source.sed"
+				1: name: "punctuation.delimiter.whitespace.end.source.sed"
+				2: name: "invalid.illegal.extra-characters.source.sed"
+			patterns: [{
+				name:  "meta.source-characters.source.sed"
+				begin: "\\G"
+				end:   "(-)?( )|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					1: name: "string.quoted.double.source.sed"
+					2: name: "punctuation.delimiter.whitespace.middle.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			},{
+				name:  "meta.replacement-characters.source.sed"
+				begin: "(?<= )"
+				end:   "(?!\\G)-?(?= )|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					0: name: "string.quoted.double.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			}, include: "#escape"]
+		},{
+			# Absurd delimiter #2: Tab
+			name:  "meta.transliteration.tab-delimiter.source.sed"
+			begin: "(y)(\\t)"
+			end:   "(\\t)([^;}]*)|$"
+			beginCaptures:
+				1: name: "keyword.control.command.source.sed"
+				2: name: "punctuation.delimiter.whitespace.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.whitespace.end.source.sed"
+				2: name: "invalid.illegal.extra-characters.source.sed"
+			patterns: [{
+				name:  "meta.source-characters.source.sed"
+				begin: "\\G"
+				end:   "(-)?(\\t)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					1: name: "string.quoted.double.source.sed"
+					2: name: "punctuation.delimiter.whitespace.middle.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			},{
+				name:  "meta.replacement-characters.source.sed"
+				begin: "(?<=\\t)"
+				end:   "(?!\\G)-?(?=\\t)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					0: name: "string.quoted.double.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			}, include: "#escape"]
+		},{
+			# Absurd delimiter #3: Semicolon
+			name:  "meta.transliteration.semicolon-delimiter.source.sed"
+			begin: "(y)(;)"
+			end:   "(;)([^;}]*)|$"
+			beginCaptures:
+				1: name: "keyword.control.command.source.sed"
+				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.pattern.end.source.sed"
+				2: name: "invalid.illegal.extra-characters.source.sed"
+			patterns: [{
+				name:  "meta.source-characters.source.sed"
+				begin: "\\G"
+				end:   "(-)?(;)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					1: name: "string.quoted.double.source.sed"
+					2: name: "punctuation.delimiter.pattern.middle.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			},{
+				name:  "meta.replacement-characters.source.sed"
+				begin: "(?<=;)"
+				end:   "(?!\\G)-?(?=;)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					0: name: "string.quoted.double.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			}, include: "#escape"]
+		},{
+			# Absurd delimiter #4: Closing brace
+			name:  "meta.transliteration.brace-delimiter.source.sed"
+			begin: "(y)(})"
+			end:   "(})([^;}]*)|$"
+			beginCaptures:
+				1: name: "keyword.control.command.source.sed"
+				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.pattern.end.source.sed"
+				2: name: "invalid.illegal.extra-characters.source.sed"
+			patterns: [{
+				name:  "meta.source-characters.source.sed"
+				begin: "\\G"
+				end:   "(-)?(})|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					1: name: "string.quoted.double.source.sed"
+					2: name: "punctuation.delimiter.pattern.middle.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			},{
+				name:  "meta.replacement-characters.source.sed"
+				begin: "(?<=})"
+				end:   "(?!\\G)-?(?=})|(?=$)"
+				contentName: "string.quoted.double.source.sed"
+				endCaptures:
+					0: name: "string.quoted.double.source.sed"
+				patterns: [include: "#transliteration.ranges"]
+			}, include: "#escape"]
+		},{
+			# Absurd delimiter #5: Dash
+			name:  "meta.transliteration.dash-delimiter.source.sed"
+			begin: "(y)(-)"
+			end:   "(-)([^;}]*)|$"
+			beginCaptures:
+				1: name: "keyword.control.command.source.sed"
+				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+			endCaptures:
+				1: name: "punctuation.delimiter.pattern.end.source.sed"
+				2: name: "invalid.illegal.extra-characters.source.sed"
 			patterns: [{
 				# First range
+				name:  "meta.source-characters.source.sed"
 				begin: "\\G"
 				end:   "-|(?=$)"
-				contentName: "string.quoted.double.source-characters.source.sed"
+				contentName: "string.quoted.double.source.sed"
 				endCaptures:
-					0: name: "punctuation.delimiter.transliteration.middle.source.sed"
+					0: name: "punctuation.delimiter.pattern.middle.source.sed"
 				patterns: [include: "#escape"]
 			},{
 				# Second range
+				name:  "meta.replacement-characters.source.sed"
 				begin: "(?<=-)"
 				end:   "(?=$|-)"
-				contentName: "string.quoted.double.destination-characters.source.sed"
+				contentName: "string.quoted.double.source.sed"
 				patterns: [include: "#escape"]
 			}, include: "#escape"]
 		},{
 			# Using a sane delimiter
 			name:  "meta.transliteration.source.sed"
 			begin: "y"
-			end:   "$|(?<!\\G)(?=.)|(?<=^)"
+			end:   "$|(?=[\\s;}])|(?<=^)"
 			beginCaptures:
 				0: name: "keyword.control.command.source.sed"
 			patterns: [{
 				# First range
+				name:  "meta.source-characters.source.sed"
 				begin: "\\G(.)"
 				end:   "-?(?=\\1|$)"
-				contentName: "string.quoted.double.source-characters.source.sed"
-				beginCaptures: 1: name: "punctuation.delimiter.substitution.begin.source.sed"
-				endCaptures:   0: name: "string.quoted.double.source-characters.source.sed"
+				contentName: "string.quoted.double.source.sed"
+				beginCaptures:
+					1: name: "punctuation.delimiter.pattern.begin.source.sed"
+				endCaptures:
+					0: name: "string.quoted.double.source.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
 				# Second range
+				name:  "meta.replacement-characters.source.sed"
 				begin: "(.)"
-				end:   "(-)?(\\1)|(?=$)"
-				contentName: "string.quoted.double.replacement.source.sed"
+				end:   "(-)?(\\1)([^;}]*+)|(?=$)"
+				contentName: "string.quoted.double.source.sed"
 				beginCaptures:
-					1: name: "punctuation.delimiter.transliteration.middle.source.sed"
+					1: name: "punctuation.delimiter.pattern.middle.source.sed"
 				endCaptures:
-					1: name: "string.quoted.double.replacement.source.sed"
-					2: name: "punctuation.delimiter.transliteration.end.source.sed"
+					1: name: "string.quoted.double.source.sed"
+					2: name: "punctuation.delimiter.pattern.end.source.sed"
+					3: name: "invalid.illegal.extra-characters.source.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}]
 		}]
