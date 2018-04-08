@@ -55,6 +55,14 @@ repository:
 			begin: "\\\\$\\s*"
 			end:   "^"
 		},{
+			# Tab
+			name:  "constant.character.tab.source.sed"
+			match: "\\\\t"
+		},{
+			# Literal newline
+			name:  "constant.character.newline.source.sed"
+			match: "\\\\n"
+		},{
 			# Anything else
 			name:  "constant.character.escape.source.sed"
 			match: "\\\\."
