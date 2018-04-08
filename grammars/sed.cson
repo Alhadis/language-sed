@@ -63,6 +63,7 @@ repository:
 	# Regular expressions
 	regexp:
 		patterns: [
+			{match: "\\.", name: "constant.character.wildcard.dot.match.any.source.sed"}
 			{match: "\\^", name: "keyword.operator.anchor.line-start.source.sed"}
 			{match: "\\$", name: "keyword.operator.anchor.line-end.source.sed"}
 			{match: "\\*", name: "keyword.operator.quantifier.source.sed"}
@@ -98,12 +99,19 @@ repository:
 				3: name: "invalid.illegal.unknown.character-class.source.sed"
 				4: name: "punctuation.definition.character-class.end.source.sed"
 		},{
-			# Collating symbols
+			# Collating symbol
 			name:  "constant.language.collating-symbol.source.sed"
 			begin: "\\[\\."
 			end:   "\\.\\]|(?=$)"
 			beginCaptures: 0: name: "punctuation.definition.collating-symbol.begin.source.sed"
 			endCaptures:   0: name: "punctuation.definition.collating-symbol.end.source.sed"
+		},{
+			# Equivalence class
+			name:  "constant.language.equivalence-class.source.sed"
+			begin: "\\[="
+			end:   "=\\]"
+			beginCaptures: 0: name: "punctuation.definition.equivalence-class.begin.source.sed"
+			endCaptures:   0: name: "punctuation.definition.equivalence-class.end.source.sed"
 		}, include: "#escape"]
 		
 
