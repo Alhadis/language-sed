@@ -40,6 +40,7 @@ repository:
 			{include: "#transliteration"}
 			{include: "#insertion"}
 			{include: "#addresses"}
+			{include: "#semicolon"}
 			{include: "#braces"}
 			{include: "#commands"}
 		]
@@ -47,37 +48,72 @@ repository:
 	# Stuff to limit execution to certain lines
 	addresses:
 		patterns: [{
+			# Numbered range of lines
+			name:  "meta.address.numbered.range.source.sed"
+			match: "([0-9]+)\\s*(,)\\s*([0-9]+)(?:\\s*(!))?"
+			captures:
+				1: name: "constant.numeric.integer.start-index.source.sed"
+				2: name: "keyword.operator.address.range.comma.source.sed"
+				3: name: "constant.numeric.integer.end-index.source.sed"
+				4: name: "keyword.operator.logical.not.negation.source.sed"
+		},{
+			# GNU: Skip line range
+			name:  "meta.address.numbered.range.step.gnu.source.sed"
+			match: "([0-9]+)\\s*(~)\\s*([0-9]+)(?:\\s*(!))?"
+			captures:
+				1: name: "constant.numeric.integer.start-index.source.sed"
+				2: name: "keyword.operator.address.range.tilde.gnu.source.sed"
+				3: name: "constant.numeric.integer.step-size.source.sed"
+				4: name: "keyword.operator.logical.not.negation.source.sed"
+		},{
+			# Specific line
+			name:  "meta.address.numbered.source.sed"
+			match: "([0-9]+)(?:\\s*(!))?"
+			captures:
+				1: name: "constant.numeric.integer.line-index.source.sed"
+				2: name: "keyword.operator.logical.not.negation.source.sed"
+		},{
+			# $
+			name: "meta.address.last-line.source.sed"
+			match: "\\$"
+			captures:
+				0: name: "constant.language.anchor.last-line.source.sed"
+		},{
 			# /regexp/
-			name:  "meta.address.source.sed"
+			name:  "meta.address.pattern.source.sed"
 			begin: "/"
-			end:   "(/)([IM]*)|$"
+			end:   "(/)([IM]*)(?:\\s*(!))?|$"
 			beginCaptures:
-				0: name: "punctuation.delimiter.address.begin.source.sed"
+				0: name: "punctuation.delimiter.pattern.begin.source.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.address.end.source.sed"
-				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
+				1: name: "punctuation.delimiter.pattern.end.source.sed"
+				2: name: "meta.flags.source.sed", patterns: [include: "#flags"]
+				3: name: "keyword.operator.logical.not.negation.source.sed"
 			contentName: "string.regexp.address.source.sed"
 			patterns: [include: "#regexp"]
 		},{
 			# \%regexp%
-			name: "meta.address.custom-delimiter.source.sed"
+			name: "meta.address.pattern.custom-delimiter.source.sed"
 			begin: "\\\\(.)"
-			end:   "(\\1)([IM]*)|$"
+			end:   "(\\1)([IM]*)(?:\\s*(!))?|$"
 			beginCaptures:
 				0: name: "punctuation.delimiter.address.begin.source.sed"
 			endCaptures:
 				1: name: "punctuation.delimiter.address.end.source.sed"
 				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
+				3: name: "keyword.operator.logical.not.negation.source.sed"
 			contentName: "string.regexp.address.source.sed"
 			patterns: [include: "#regexp"]
 		},{
-			# GNU: Skip address
-			name:  "meta.address.step.gnu.source.sed"
-			match: "([0-9]+)(~)([0-9]+)"
+			# Address range denoted by a separating comma
+			match: "(,)(\\s*(?:(\\+)|(~)))?\\s*([0-9]*)(?:\\s*(!))?"
 			captures:
-				1: name: "constant.numeric.integer.start-index.source.sed"
-				2: name: "keyword.operator.step.range.gnu.source.sed"
-				3: name: "constant.numeric.integer.step-size.source.sed"
+				1: name: "keyword.operator.address.range.comma.source.sed"
+				2: name: "meta.address.range.nth-line.gnu.source.sed"
+				3: name: "keyword.operator.arithmetic.plus.gnu.source.sed"
+				4: name: "keyword.operator.arithmetic.tilde.gnu.source.sed"
+				5: name: "constant.numeric.integer.line-index.source.sed"
+				6: name: "keyword.operator.logical.not.negation.source.sed"
 		}]
 	
 	
@@ -289,6 +325,12 @@ repository:
 			endCaptures:   0: name: "punctuation.definition.equivalence-class.end.source.sed"
 			patterns: [include: "#escape"]
 		}, include: "#escape"]
+	
+	
+	# Command ; separator
+	semicolon:
+		name: "punctuation.terminator.statement.semicolon.source.sed"
+		match: ";"
 		
 
 	# s/ … / … /
