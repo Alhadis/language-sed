@@ -38,6 +38,7 @@ repository:
 			{include: "#comment"}
 			{include: "#substitution"}
 			{include: "#transliteration"}
+			{include: "#insertion"}
 			{include: "#addresses"}
 			{include: "#braces"}
 			{include: "#commands"}
@@ -145,6 +146,29 @@ repository:
 			name:  "constant.character.escape.source.sed"
 			match: "\\\\."
 		}]
+
+
+	# a, i, and c
+	insertion:
+		patterns: [{
+			name:  "meta.insertion.source.sed"
+			begin: "[aic](\\\\)$\\s*"
+			end:   "$"
+			contentName: "string.unquoted.herestring.source.sed"
+			beginCaptures:
+				0: name: "keyword.control.insertion.command.source.sed"
+				1: name: "constant.character.escape.newline.source.sed"
+			patterns: [include: "#escape"]
+		},{
+			# GNU: Single-line form
+			name:  "meta.insertion.gnu.source.sed"
+			begin: "[aic]"
+			end:   "$"
+			beginCaptures:
+				0: name: "keyword.control.insertion.command.source.sed"
+			patterns: [include: "#escape"]
+		}]
+
 
 	# Regular expressions
 	regexp:
