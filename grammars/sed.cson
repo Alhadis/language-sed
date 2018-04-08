@@ -38,9 +38,11 @@ repository:
 			{include: "#comment"}
 			{include: "#substitution"}
 			{include: "#addresses"}
+			{include: "#braces"}
+			{include: "#commands"}
 		]
 	
-	# Regular expression addresses
+	# Stuff to limit execution to certain lines
 	addresses:
 		patterns: [{
 			# /regexp/
@@ -66,8 +68,41 @@ repository:
 				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
 			contentName: "string.regexp.address.source.sed"
 			patterns: [include: "#regexp"]
+		},{
+			# GNU: Skip address
+			name:  "meta.address.step.gnu.source.sed"
+			match: "([0-9]+)(~)([0-9]+)"
+			captures:
+				1: name: "constant.numeric.integer.start-index.source.sed"
+				2: name: "keyword.operator.step.range.gnu.source.sed"
+				3: name: "constant.numeric.integer.step-size.source.sed"
 		}]
-		
+	
+	
+	# { commands… }
+	braces:
+		name:  "meta.group.source.sed"
+		begin: "{"
+		end:   "}"
+		beginCaptures: 0: name: "punctuation.section.scope.begin.source.sed"
+		endCaptures:   0: name: "punctuation.section.scope.end.source.sed"
+		patterns: [include: "#main"]
+	
+	
+	# Single-letter commands
+	commands:
+		patterns: [
+			{match: "d", name: "keyword.control.delete.command.source.sed"}
+			{match: "p", name: "keyword.control.print.command.source.sed"}
+			{match: "n", name: "keyword.control.skip.command.source.sed"}
+			
+			# Quit sed with optional exit status
+			match: "(q)(?:\\s*([0-9]+))?"
+			captures:
+				1: name: "keyword.control.quit.command.source.sed"
+				2: name: "variable.parameter.exit-code.gnu.source.sed"
+		]
+	
 	
 	# Lines beginning with a number-sign
 	comment:
