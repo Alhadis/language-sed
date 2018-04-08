@@ -1,5 +1,7 @@
 {
 	"name": "language-sed",
 	"version": "v0.0.0",
-	"description": "Syntax highlighting for `sed` scripts."
+	"description": "Syntax highlighting for `sed` scripts.",
+	"license": "ISC",
+	"author": "John Gardner <gardnerjohng@gmail.com>"
 }
