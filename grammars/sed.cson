@@ -101,12 +101,15 @@ repository:
 	# Regular expressions
 	regexp:
 		patterns: [
-			{match: "\\.", name: "constant.character.wildcard.dot.match.any.source.sed"}
-			{match: "\\^", name: "keyword.operator.anchor.line-start.source.sed"}
-			{match: "\\$", name: "keyword.operator.anchor.line-end.source.sed"}
-			{match: "\\*", name: "keyword.operator.quantifier.source.sed"}
+			{match: "\\.",      name: "constant.character.wildcard.dot.match.any.source.sed"}
+			{match: "\\^",      name: "keyword.operator.anchor.line-start.source.sed"}
+			{match: "\\$",      name: "keyword.operator.anchor.line-end.source.sed"}
+			{match: "\\*",      name: "keyword.operator.quantifier.source.sed"}
 			{match: "\\\\?\\(", name: "constant.language.group.begin.source.sed"}
 			{match: "\\\\?\\)", name: "constant.language.group.end.source.sed"}
+			{match: "\\\\[Ll]", name: "keyword.operator.lowercase.conversion.gnu.source.sed"}
+			{match: "\\\\[Uu]", name: "keyword.operator.uppercase.conversion.gnu.source.sed"}
+			{match: "\\\\E",    name: "keyword.operator.end.conversion.gnu.source.sed"}
 			{include: "#regexp.bracketExpression"}
 			{include: "#escape"}
 		]
@@ -145,6 +148,7 @@ repository:
 			end:   "\\.\\]|(?=$)"
 			beginCaptures: 0: name: "punctuation.definition.collating-symbol.begin.source.sed"
 			endCaptures:   0: name: "punctuation.definition.collating-symbol.end.source.sed"
+			patterns: [include: "#escape"]
 		},{
 			# Equivalence class
 			name:  "constant.language.equivalence-class.source.sed"
@@ -152,6 +156,7 @@ repository:
 			end:   "=\\]"
 			beginCaptures: 0: name: "punctuation.definition.equivalence-class.begin.source.sed"
 			endCaptures:   0: name: "punctuation.definition.equivalence-class.end.source.sed"
+			patterns: [include: "#escape"]
 		}, include: "#escape"]
 		
 
@@ -180,6 +185,8 @@ repository:
 				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
 				3: name: "invalid.illegal.unknown.flag.source.sed"
 			patterns: [
+				{match: "\\\\[0-9]", name: "variable.language.reference.source.sed"}
+				{match: "&",         name: "variable.language.input.source.sed"}
 				{include: "#escape"}
 			]
 		}]
