@@ -3,17 +3,19 @@ Change Log
 
 This project honours [Semantic Versioning](http://semver.org).
 
-[Staged]: ../../compare/v1.0.0...HEAD
+[Staged]: ../../compare/v1.1.0...HEAD
 
 
-[Staged]
+[v1.1.0]
 ------------------------------------------------------------------------
+**July 5th, 2021**  
 * Added this change-log
 * Added grammar for [`ed(1)`][2] commands
 * Fixed incorrect highlighting of `/[^]]/`
 * Fixed [various inaccuracies][1] related to modeline matching
 * Sed tokens are no longer scoped with `source`
 
+[v1.1.0]: https://github.com/Alhadis/language-sed/releases/v1.1.0
 [1]: https://github.com/github/linguist/pull/5271
 [2]: https://man.openbsd.org/ed
 
