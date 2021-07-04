@@ -24,11 +24,11 @@ firstLineMatch: """(?x)
 """
 patterns: [
 	# Interpreter directive
-	name:  "comment.line.number-sign.hashbang.source.sed"
+	name:  "comment.line.number-sign.hashbang.sed"
 	begin: "\\A#!"
 	end:   "$"
 	beginCaptures:
-		0: name: "punctuation.definition.comment.source.sed"
+		0: name: "punctuation.definition.comment.sed"
 	
 	# Remainder of grammar
 	{include: "#main"}
@@ -51,154 +51,154 @@ repository:
 	addresses:
 		patterns: [{
 			# Numbered range of lines
-			name:  "meta.address.numbered.range.source.sed"
+			name:  "meta.address.numbered.range.sed"
 			match: "([0-9]+)\\s*(,)\\s*([0-9]+)(?:\\s*(!))?"
 			captures:
-				1: name: "constant.numeric.integer.start-index.source.sed"
-				2: name: "keyword.operator.address.range.comma.source.sed"
-				3: name: "constant.numeric.integer.end-index.source.sed"
-				4: name: "keyword.operator.logical.not.negation.source.sed"
+				1: name: "constant.numeric.integer.start-index.sed"
+				2: name: "keyword.operator.address.range.comma.sed"
+				3: name: "constant.numeric.integer.end-index.sed"
+				4: name: "keyword.operator.logical.not.negation.sed"
 		},{
 			# GNU: Skip line range
-			name:  "meta.address.numbered.range.step.gnu.source.sed"
+			name:  "meta.address.numbered.range.step.gnu.sed"
 			match: "([0-9]+)\\s*(~)\\s*([0-9]+)(?:\\s*(!))?"
 			captures:
-				1: name: "constant.numeric.integer.start-index.source.sed"
-				2: name: "keyword.operator.address.range.tilde.gnu.source.sed"
-				3: name: "constant.numeric.integer.step-size.source.sed"
-				4: name: "keyword.operator.logical.not.negation.source.sed"
+				1: name: "constant.numeric.integer.start-index.sed"
+				2: name: "keyword.operator.address.range.tilde.gnu.sed"
+				3: name: "constant.numeric.integer.step-size.sed"
+				4: name: "keyword.operator.logical.not.negation.sed"
 		},{
 			# Specific line
-			name:  "meta.address.numbered.source.sed"
+			name:  "meta.address.numbered.sed"
 			match: "([0-9]+)(?:\\s*(!))?"
 			captures:
-				1: name: "constant.numeric.integer.line-index.source.sed"
-				2: name: "keyword.operator.logical.not.negation.source.sed"
+				1: name: "constant.numeric.integer.line-index.sed"
+				2: name: "keyword.operator.logical.not.negation.sed"
 		},{
 			# $
-			name: "meta.address.last-line.source.sed"
+			name: "meta.address.last-line.sed"
 			match: "\\$"
 			captures:
-				0: name: "constant.language.anchor.last-line.source.sed"
+				0: name: "constant.language.anchor.last-line.sed"
 		},{
 			# /regexp/
-			name:  "meta.address.pattern.source.sed"
+			name:  "meta.address.pattern.sed"
 			begin: "/"
 			end:   "(/)([IM]*)(?:\\s*(!))?|$"
 			beginCaptures:
-				0: name: "punctuation.delimiter.pattern.begin.source.sed"
+				0: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "meta.flags.source.sed", patterns: [include: "#flags"]
-				3: name: "keyword.operator.logical.not.negation.source.sed"
-			contentName: "string.regexp.address.source.sed"
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "meta.flags.sed", patterns: [include: "#flags"]
+				3: name: "keyword.operator.logical.not.negation.sed"
+			contentName: "string.regexp.address.sed"
 			patterns: [include: "#regexp"]
 		},{
 			# \%regexp%
-			name: "meta.address.pattern.custom-delimiter.source.sed"
+			name: "meta.address.pattern.custom-delimiter.sed"
 			begin: "\\\\(.)"
 			end:   "(\\1)([IM]*)(?:\\s*(!))?|$"
 			beginCaptures:
-				0: name: "punctuation.delimiter.address.begin.source.sed"
+				0: name: "punctuation.delimiter.address.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.address.end.source.sed"
-				2: name: "meta.modifier.flags.source.sed", patterns: [include: "#flags"]
-				3: name: "keyword.operator.logical.not.negation.source.sed"
-			contentName: "string.regexp.address.source.sed"
+				1: name: "punctuation.delimiter.address.end.sed"
+				2: name: "meta.modifier.flags.sed", patterns: [include: "#flags"]
+				3: name: "keyword.operator.logical.not.negation.sed"
+			contentName: "string.regexp.address.sed"
 			patterns: [include: "#regexp"]
 		},{
 			# Address range denoted by a separating comma
 			match: "(,)(\\s*(?:(\\+)|(~)))?\\s*([0-9]*)(?:\\s*(!))?"
 			captures:
-				1: name: "keyword.operator.address.range.comma.source.sed"
-				2: name: "meta.address.range.nth-line.gnu.source.sed"
-				3: name: "keyword.operator.arithmetic.plus.gnu.source.sed"
-				4: name: "keyword.operator.arithmetic.tilde.gnu.source.sed"
-				5: name: "constant.numeric.integer.line-index.source.sed"
-				6: name: "keyword.operator.logical.not.negation.source.sed"
+				1: name: "keyword.operator.address.range.comma.sed"
+				2: name: "meta.address.range.nth-line.gnu.sed"
+				3: name: "keyword.operator.arithmetic.plus.gnu.sed"
+				4: name: "keyword.operator.arithmetic.tilde.gnu.sed"
+				5: name: "constant.numeric.integer.line-index.sed"
+				6: name: "keyword.operator.logical.not.negation.sed"
 		}]
 	
 	
 	# { commands… }
 	braces:
-		name:  "meta.group.source.sed"
+		name:  "meta.group.sed"
 		begin: "{"
 		end:   "}"
-		beginCaptures: 0: name: "punctuation.section.scope.begin.source.sed"
-		endCaptures:   0: name: "punctuation.section.scope.end.source.sed"
+		beginCaptures: 0: name: "punctuation.section.scope.begin.sed"
+		endCaptures:   0: name: "punctuation.section.scope.end.sed"
 		patterns: [include: "#main"]
 	
 	
 	# Single-letter commands
 	commands:
 		patterns: [
-			{match: "[Dd]", name: "keyword.control.delete.command.source.sed"}
-			{match: "[Pp]", name: "keyword.control.print.command.source.sed"}
-			{match: "[Hh]", name: "keyword.control.replace-hold.command.source.sed"}
-			{match: "[Gg]", name: "keyword.control.replace-pattern.command.source.sed"}
-			{match: "x",    name: "keyword.control.exchange.command.source.sed"}
-			{match: "F",    name: "keyword.control.print.filename.gnu.source.sed"}
-			{match: "n",    name: "keyword.control.skip.command.source.sed"}
-			{match: "N",    name: "keyword.control.print.newline.source.sed"}
-			{match: "=",    name: "keyword.control.print.line-number.source.sed"}
-			{match: "z",    name: "keyword.control.zap.gnu.source.sed"}
+			{match: "[Dd]", name: "keyword.control.delete.command.sed"}
+			{match: "[Pp]", name: "keyword.control.print.command.sed"}
+			{match: "[Hh]", name: "keyword.control.replace-hold.command.sed"}
+			{match: "[Gg]", name: "keyword.control.replace-pattern.command.sed"}
+			{match: "x",    name: "keyword.control.exchange.command.sed"}
+			{match: "F",    name: "keyword.control.print.filename.gnu.sed"}
+			{match: "n",    name: "keyword.control.skip.command.sed"}
+			{match: "N",    name: "keyword.control.print.newline.sed"}
+			{match: "=",    name: "keyword.control.print.line-number.sed"}
+			{match: "z",    name: "keyword.control.zap.gnu.sed"}
 			{
 				# Print pattern space unambiguously
 				match: "(l)(?:\\s*([0-9]+))?"
 				captures:
-					1: name: "keyword.control.print.unambiguously.source.sed"
-					2: name: "variable.parameter.line-length.gnu.source.sed"
+					1: name: "keyword.control.print.unambiguously.sed"
+					2: name: "variable.parameter.line-length.gnu.sed"
 			},{
 				# Quit sed with optional exit status
 				match: "(?:(q)|(Q))(?:\\s*([0-9]+))?"
 				captures:
-					1: name: "keyword.control.quit.command.source.sed"
-					2: name: "keyword.control.quit.silently.command.gnu.source.sed"
-					3: name: "variable.parameter.exit-code.gnu.source.sed"
+					1: name: "keyword.control.quit.command.sed"
+					2: name: "keyword.control.quit.silently.command.gnu.sed"
+					3: name: "variable.parameter.exit-code.gnu.sed"
 			},{
 				# Read contents of file
 				match: "(?:(r)|(R))\\s*(\\S.*)$"
 				captures:
-					1: name: "keyword.control.read.file.command.source.sed"
-					2: name: "keyword.control.read.file.line.command.gnu.source.sed"
-					3: name: "string.unquoted.filename.source.sed"
+					1: name: "keyword.control.read.file.command.sed"
+					2: name: "keyword.control.read.file.line.command.gnu.sed"
+					3: name: "string.unquoted.filename.sed"
 			},{
 				# Write to filename
 				match: "(?:(w)|(W))\\s*(\\S.*)$"
 				captures:
-					1: name: "keyword.control.write.file.command.source.sed"
-					2: name: "keyword.control.write.file.command.gnu.source.sed"
-					3: name: "string.unquoted.filename.source.sed"
+					1: name: "keyword.control.write.file.command.sed"
+					2: name: "keyword.control.write.file.command.gnu.sed"
+					3: name: "string.unquoted.filename.sed"
 			},{
 				# Define location of label for branching
-				name:  "meta.label.source.sed"
+				name:  "meta.label.sed"
 				match: "(:)\\s*([^\\s;#}]+)"
 				captures:
-					1: name: "storage.type.function.label.source.sed"
-					2: name: "entity.name.function.label.source.sed"
+					1: name: "storage.type.function.label.sed"
+					2: name: "entity.name.function.label.sed"
 			},{
 				# Branch to label
-				name:  "meta.branch.source.sed"
+				name:  "meta.branch.sed"
 				match: "(?:([bt])|(T))(?:\\s*([^\\s;#}]+))?"
 				captures:
-					1: name: "keyword.control.branch.source.sed"
-					2: name: "keyword.control.branch.inverse.gnu.source.sed"
-					3: name: "entity.name.function.label.source.sed"
+					1: name: "keyword.control.branch.sed"
+					2: name: "keyword.control.branch.inverse.gnu.sed"
+					3: name: "entity.name.function.label.sed"
 			},{
 				# GNU: Execute command in shell
-				name:  "meta.execution.source.sed"
+				name:  "meta.execution.sed"
 				begin: "(e)\\s*"
 				end:   "$"
-				contentName: "string.unquoted.herestring.source.sed"
+				contentName: "string.unquoted.herestring.sed"
 				beginCaptures:
-					1: name: "keyword.control.execute.source.sed"
+					1: name: "keyword.control.execute.sed"
 				patterns: [include: "#escape"]
 			},{
 				# GNU: Require extensions or version
 				match: "(v)(?:\\s*([^\\s;#}]+))?"
 				captures:
-					1: name: "keyword.control.version.gnu.source.sed"
-					2: name: "constant.other.version-string.source.sed"
+					1: name: "keyword.control.version.gnu.sed"
+					2: name: "constant.other.version-string.sed"
 			}
 		]
 	
@@ -210,16 +210,16 @@ repository:
 			begin: "\\A(#)n"
 			end:   "$"
 			beginCaptures:
-				0: name: "keyword.control.directive.no-autoprint.source.sed"
-				1: name: "punctuation.definition.directive.source.sed"
-			contentName: "comment.line.number-sign.source.sed"
+				0: name: "keyword.control.directive.no-autoprint.sed"
+				1: name: "punctuation.definition.directive.sed"
+			contentName: "comment.line.number-sign.sed"
 		},{
 			# Ordinary comments like this one
-			name:  "comment.line.number-sign.source.sed"
+			name:  "comment.line.number-sign.sed"
 			begin: "#"
 			end:   "$"
 			beginCaptures:
-				0: name: "punctuation.definition.comment.source.sed"
+				0: name: "punctuation.definition.comment.sed"
 		}]
 
 
@@ -227,20 +227,20 @@ repository:
 	escape:
 		patterns: [{
 			# Escaped newline
-			name:  "constant.character.escape.newline.source.sed"
+			name:  "constant.character.escape.newline.sed"
 			begin: "\\\\$\\s*"
 			end:   "^"
 		},{
 			# Tab
-			name:  "constant.character.tab.source.sed"
+			name:  "constant.character.tab.sed"
 			match: "\\\\t"
 		},{
 			# Literal newline
-			name:  "constant.character.newline.source.sed"
+			name:  "constant.character.newline.sed"
 			match: "\\\\n"
 		},{
 			# Anything else
-			name:  "constant.character.escape.source.sed"
+			name:  "constant.character.escape.sed"
 			match: "\\\\."
 		}]
 
@@ -248,22 +248,22 @@ repository:
 	# a, i, and c
 	insertion:
 		patterns: [{
-			name:  "meta.insertion.source.sed"
+			name:  "meta.insertion.sed"
 			begin: "[aic](\\\\)$\\s*"
 			end:   "$"
-			contentName: "string.unquoted.herestring.source.sed"
+			contentName: "string.unquoted.herestring.sed"
 			beginCaptures:
-				0: name: "keyword.control.insertion.command.source.sed"
-				1: name: "constant.character.escape.newline.source.sed"
+				0: name: "keyword.control.insertion.command.sed"
+				1: name: "constant.character.escape.newline.sed"
 			patterns: [include: "#escape"]
 		},{
 			# GNU: Single-line form
-			name:  "meta.insertion.gnu.source.sed"
+			name:  "meta.insertion.gnu.sed"
 			begin: "[aic]"
 			end:   "$"
-			contentName: "string.unquoted.herestring.source.sed"
+			contentName: "string.unquoted.herestring.sed"
 			beginCaptures:
-				0: name: "keyword.control.insertion.command.source.sed"
+				0: name: "keyword.control.insertion.command.sed"
 			patterns: [include: "#escape"]
 		}]
 
@@ -276,15 +276,15 @@ repository:
 			# a sequence like `\(` might be a group (if BRE), or an escaped/literal bracket
 			# if ERE. There's no way of knowing which flavour is in use from a grammar, so
 			# our best bet is to just assume. Nice, huh?
-			{match: "\\.",      name: "constant.language.wildcard.dot.match.any.source.sed"}
-			{match: "\\^",      name: "constant.language.anchor.line-start.source.sed"}
-			{match: "\\$",      name: "constant.language.anchor.line-end.source.sed"}
-			{match: "\\*",      name: "constant.language.quantifier.min-0.source.sed"}
-			{match: "\\\\?\\+", name: "constant.language.quantifier.min-1.source.sed"}
-			{match: "\\\\?\\?", name: "constant.language.quantifier.max-1.source.sed"}
-			{match: "\\\\?\\|", name: "constant.language.alternation.disjunction.source.sed"}
-			{match: "\\\\?\\(", name: "constant.language.group.begin.source.sed"}
-			{match: "\\\\?\\)", name: "constant.language.group.end.source.sed"}
+			{match: "\\.",      name: "constant.language.wildcard.dot.match.any.sed"}
+			{match: "\\^",      name: "constant.language.anchor.line-start.sed"}
+			{match: "\\$",      name: "constant.language.anchor.line-end.sed"}
+			{match: "\\*",      name: "constant.language.quantifier.min-0.sed"}
+			{match: "\\\\?\\+", name: "constant.language.quantifier.min-1.sed"}
+			{match: "\\\\?\\?", name: "constant.language.quantifier.max-1.sed"}
+			{match: "\\\\?\\|", name: "constant.language.alternation.disjunction.sed"}
+			{match: "\\\\?\\(", name: "constant.language.group.begin.sed"}
+			{match: "\\\\?\\)", name: "constant.language.group.end.sed"}
 			{include: "#reference"}
 			{include: "#regexp.miscEscapes"}
 			{include: "#regexp.quantiferRanges"}
@@ -296,120 +296,120 @@ repository:
 
 	# Bracket expression: [^a-f\d]
 	"regexp.bracketExpression":
-		name: "string.regexp.character-class.source.sed"
+		name: "string.regexp.character-class.sed"
 		begin: "\\["
 		end:   "\\]|(?=$)"
-		beginCaptures: 0: name: "punctuation.definition.character-class.begin.source.sed"
-		endCaptures:   0: name: "punctuation.definition.character-class.end.source.sed"
+		beginCaptures: 0: name: "punctuation.definition.character-class.begin.sed"
+		endCaptures:   0: name: "punctuation.definition.character-class.end.sed"
 		patterns: [{
 			# Negation
-			name: "keyword.operator.logical.not.source.sed"
+			name: "keyword.operator.logical.not.sed"
 			match: "\\G\\^"
 		},{
 			# Ignore a closing bracket if it's listed first
 			match: "\\G\\]"
 		},{
 			# Dash separating two halves of a range expression
-			name: "punctuation.separator.range.dash.source.sed"
+			name: "punctuation.separator.range.dash.sed"
 			match: "(?<!\\G)-(?!$|\\])"
 		},{
 			# Named character classes [:alnum:]
-			name:  "constant.language.named.character-class.source.sed"
+			name:  "constant.language.named.character-class.sed"
 			match: "(\\[:)(?:(alnum|alpha|blank|cntrl|digit|graph|lower|print|punct|space|upper|xdigit)|(.*?))(\\:])"
 			captures:
-				1: name: "punctuation.definition.character-class.begin.source.sed"
-				2: name: "support.constant.posix-class.source.sed"
-				3: name: "invalid.illegal.unknown.character-class.source.sed"
-				4: name: "punctuation.definition.character-class.end.source.sed"
+				1: name: "punctuation.definition.character-class.begin.sed"
+				2: name: "support.constant.posix-class.sed"
+				3: name: "invalid.illegal.unknown.character-class.sed"
+				4: name: "punctuation.definition.character-class.end.sed"
 		},{
 			# Collating symbol
-			name:  "constant.language.collating-symbol.source.sed"
+			name:  "constant.language.collating-symbol.sed"
 			begin: "\\[\\."
 			end:   "\\.\\]|(?=$)"
-			beginCaptures: 0: name: "punctuation.definition.collating-symbol.begin.source.sed"
-			endCaptures:   0: name: "punctuation.definition.collating-symbol.end.source.sed"
+			beginCaptures: 0: name: "punctuation.definition.collating-symbol.begin.sed"
+			endCaptures:   0: name: "punctuation.definition.collating-symbol.end.sed"
 			patterns: [include: "#escape"]
 		},{
 			# Equivalence class
-			name:  "constant.language.equivalence-class.source.sed"
+			name:  "constant.language.equivalence-class.sed"
 			begin: "\\[="
 			end:   "=\\]"
-			beginCaptures: 0: name: "punctuation.definition.equivalence-class.begin.source.sed"
-			endCaptures:   0: name: "punctuation.definition.equivalence-class.end.source.sed"
+			beginCaptures: 0: name: "punctuation.definition.equivalence-class.begin.sed"
+			endCaptures:   0: name: "punctuation.definition.equivalence-class.end.sed"
 			patterns: [include: "#escape"]
 		}, include: "#escape"]
 
 	"regexp.gnuCharacterEscapes":
 		patterns: [
-			{match: "\\\\a",  name: "constant.character.escape.alert.gnu.source.sed"}
-			{match: "\\\\f",  name: "constant.character.escape.form-feed.gnu.source.sed"}
-			{match: "\\\\r",  name: "constant.character.escape.carriage-return.gnu.source.sed"}
-			{match: "\\\\t",  name: "constant.character.escape.tab.gnu.source.sed"}
-			{match: "\\\\v",  name: "constant.character.escape.vertical-tab.gnu.source.sed"}
-			{match: "\\\\c.", name: "constant.character.escape.control-x.gnu.source.sed"}
-			{match: "\\\\d[0-9]{3}", name: "constant.character.escape.decimal.codepoint.gnu.source.sed"}
-			{match: "\\\\o[0-7]{3}", name: "constant.character.escape.octal.codepoint.gnu.source.sed"}
-			{match: "\\\\x[0-9A-Fa-f]{2}", name: "constant.character.escape.hex.codepoint.gnu.source.sed"}
+			{match: "\\\\a",  name: "constant.character.escape.alert.gnu.sed"}
+			{match: "\\\\f",  name: "constant.character.escape.form-feed.gnu.sed"}
+			{match: "\\\\r",  name: "constant.character.escape.carriage-return.gnu.sed"}
+			{match: "\\\\t",  name: "constant.character.escape.tab.gnu.sed"}
+			{match: "\\\\v",  name: "constant.character.escape.vertical-tab.gnu.sed"}
+			{match: "\\\\c.", name: "constant.character.escape.control-x.gnu.sed"}
+			{match: "\\\\d[0-9]{3}", name: "constant.character.escape.decimal.codepoint.gnu.sed"}
+			{match: "\\\\o[0-7]{3}", name: "constant.character.escape.octal.codepoint.gnu.sed"}
+			{match: "\\\\x[0-9A-Fa-f]{2}", name: "constant.character.escape.hex.codepoint.gnu.sed"}
 		]
 
 	"regexp.gnuEscapes":
 		patterns: [
-			{match: "\\\\[Ll]", name: "keyword.operator.lowercase.conversion.gnu.source.sed"}
-			{match: "\\\\[Uu]", name: "keyword.operator.uppercase.conversion.gnu.source.sed"}
-			{match: "\\\\E",    name: "keyword.operator.end.conversion.gnu.source.sed"}
-			{match: "\\\\w",    name: "constant.language.word-character.gnu.source.sed"}
-			{match: "\\\\W",    name: "constant.language.word-character.negated.gnu.source.sed"}
-			{match: "\\\\b",    name: "constant.language.word-boundary.gnu.source.sed"}
-			{match: "\\\\B",    name: "constant.language.word-boundary.negated.gnu.source.sed"}
-			{match: "\\\\s",    name: "constant.language.whitespace-character.gnu.source.sed"}
-			{match: "\\\\S",    name: "constant.language.whitespace-character.negated.gnu.source.sed"}
-			{match: "\\\\<",    name: "constant.language.anchor.beginning-of-word.gnu.source.sed"}
-			{match: "\\\\>",    name: "constant.language.anchor.end-of-word.gnu.source.sed"}
-			{match: "\\\\`",    name: "constant.language.anchor.start-of-pattern.gnu.source.sed"}
-			{match: "\\\\'",    name: "constant.language.anchor.end-of-pattern.gnu.source.sed"}
+			{match: "\\\\[Ll]", name: "keyword.operator.lowercase.conversion.gnu.sed"}
+			{match: "\\\\[Uu]", name: "keyword.operator.uppercase.conversion.gnu.sed"}
+			{match: "\\\\E",    name: "keyword.operator.end.conversion.gnu.sed"}
+			{match: "\\\\w",    name: "constant.language.word-character.gnu.sed"}
+			{match: "\\\\W",    name: "constant.language.word-character.negated.gnu.sed"}
+			{match: "\\\\b",    name: "constant.language.word-boundary.gnu.sed"}
+			{match: "\\\\B",    name: "constant.language.word-boundary.negated.gnu.sed"}
+			{match: "\\\\s",    name: "constant.language.whitespace-character.gnu.sed"}
+			{match: "\\\\S",    name: "constant.language.whitespace-character.negated.gnu.sed"}
+			{match: "\\\\<",    name: "constant.language.anchor.beginning-of-word.gnu.sed"}
+			{match: "\\\\>",    name: "constant.language.anchor.end-of-word.gnu.sed"}
+			{match: "\\\\`",    name: "constant.language.anchor.start-of-pattern.gnu.sed"}
+			{match: "\\\\'",    name: "constant.language.anchor.end-of-pattern.gnu.sed"}
 		]
 
 	"regexp.miscEscapes":
 		patterns: [
-			{match: "\\\\\\$", name: "constant.character.escape.dollar-sign.source.sed"}
-			{match: "\\\\\\*", name: "constant.character.escape.asterisk.source.sed"}
-			{match: "\\\\\\.", name: "constant.character.escape.dot.period.source.sed"}
-			{match: "\\\\\\[", name: "constant.character.escape.square.bracket.source.sed"}
-			{match: "\\\\{2}", name: "constant.character.escape.backslash.source.sed"}
-			{match: "\\\\\\^", name: "constant.character.escape.caret.source.sed"}
+			{match: "\\\\\\$", name: "constant.character.escape.dollar-sign.sed"}
+			{match: "\\\\\\*", name: "constant.character.escape.asterisk.sed"}
+			{match: "\\\\\\.", name: "constant.character.escape.dot.period.sed"}
+			{match: "\\\\\\[", name: "constant.character.escape.square.bracket.sed"}
+			{match: "\\\\{2}", name: "constant.character.escape.backslash.sed"}
+			{match: "\\\\\\^", name: "constant.character.escape.caret.sed"}
 		]
 
 	"regexp.quantiferRanges":
 		patterns: [{
-			name:  "meta.escaped.quantifier.specific.range.source.sed"
+			name:  "meta.escaped.quantifier.specific.range.sed"
 			match: "(\\\\{)([0-9]+)(?:(,)([0-9]+)?)?(\\\\})"
 			captures:
-				1: name: "punctuation.definition.quantifier.bracket.curly.begin.source.sed"
-				2: name: "constant.numeric.integer.source.sed"
-				3: name: "punctuation.separator.range.comma.source.sed"
-				4: name: "constant.numeric.integer.source.sed"
-				5: name: "punctuation.definition.quantifier.bracket.curly.end.source.sed"
+				1: name: "punctuation.definition.quantifier.bracket.curly.begin.sed"
+				2: name: "constant.numeric.integer.sed"
+				3: name: "punctuation.separator.range.comma.sed"
+				4: name: "constant.numeric.integer.sed"
+				5: name: "punctuation.definition.quantifier.bracket.curly.end.sed"
 		},{
-			name:  "meta.unescaped.quantifier.specific.range.source.sed"
+			name:  "meta.unescaped.quantifier.specific.range.sed"
 			match: "({)([0-9]+)(?:(,)([0-9]+)?)?(})"
 			captures:
-				1: name: "punctuation.definition.quantifier.bracket.curly.begin.source.sed"
-				2: name: "constant.numeric.integer.source.sed"
-				3: name: "punctuation.separator.range.comma.source.sed"
-				4: name: "constant.numeric.integer.source.sed"
-				5: name: "punctuation.definition.quantifier.bracket.curly.end.source.sed"
+				1: name: "punctuation.definition.quantifier.bracket.curly.begin.sed"
+				2: name: "constant.numeric.integer.sed"
+				3: name: "punctuation.separator.range.comma.sed"
+				4: name: "constant.numeric.integer.sed"
+				5: name: "punctuation.definition.quantifier.bracket.curly.end.sed"
 		}]
 
 
 	# Backreference to a capturing group: \1 … \9
 	reference:
-		name: "variable.language.reference.source.sed"
+		name: "variable.language.reference.sed"
 		match: "\\\\[0-9]"
 
 	
 	# Command ; separator
 	semicolon:
-		name: "punctuation.terminator.statement.semicolon.source.sed"
+		name: "punctuation.terminator.statement.semicolon.sed"
 		match: ";"
 		
 
@@ -417,116 +417,116 @@ repository:
 	substitution:
 		patterns: [{
 			# Idiotic delimiter #1: Number-signs
-			name: "meta.substitution.pound-delimiter.source.sed"
+			name: "meta.substitution.pound-delimiter.sed"
 			begin: "(s)(#)"
 			end:   "(#)([^;#}]*+)|(?=$|[;#}])"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "meta.options.source.sed", patterns: [include: "#flags"]
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "meta.options.sed", patterns: [include: "#flags"]
 			patterns: [{
-				name:  "meta.match-pattern.source.sed"
+				name:  "meta.match-pattern.sed"
 				begin: "\\G"
 				end:   "#|(?=$)"
-				contentName: "string.regexp.substitution.search.source.sed"
+				contentName: "string.regexp.substitution.search.sed"
 				endCaptures:
-					0: name: "punctuation.delimiter.pattern.middle.source.sed"
+					0: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#regexp"]
 			},{
-				name:  "meta.replacement.source.sed"
+				name:  "meta.replacement.sed"
 				begin: "(?<=#)"
 				end:   "(?!\\G)(?=#)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				patterns: [include: "#replacement.innards"]
 			}, include: "#escape"]
 		},{
 			# Idiotic delimiter #2: Semicolons
-			name: "meta.substitution.semicolon-delimiter.source.sed"
+			name: "meta.substitution.semicolon-delimiter.sed"
 			begin: "(s)(;)"
 			end:   "(;)([^;#}]*+)|(?=$|[;#}])"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "meta.options.source.sed", patterns: [include: "#flags"]
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "meta.options.sed", patterns: [include: "#flags"]
 			patterns: [{
-				name:  "meta.match-pattern.source.sed"
+				name:  "meta.match-pattern.sed"
 				begin: "\\G"
 				end:   ";|(?=$)"
-				contentName: "string.regexp.substitution.search.source.sed"
+				contentName: "string.regexp.substitution.search.sed"
 				endCaptures:
-					0: name: "punctuation.delimiter.pattern.middle.source.sed"
+					0: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#regexp"]
 			},{
-				name:  "meta.replacement.source.sed"
+				name:  "meta.replacement.sed"
 				begin: "(?<=;)"
 				end:   "(?!\\G)(?=;)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				patterns: [include: "#replacement.innards"]
 			}, include: "#escape"]
 		},{
 			# Idiotic delimiter #3: Closing braces
-			name: "meta.substitution.brace-delimiter.source.sed"
+			name: "meta.substitution.brace-delimiter.sed"
 			begin: "(s)(})"
 			end:   "(})([^;#}]*+)|(?=$|[;#}])"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "meta.options.source.sed", patterns: [include: "#flags"]
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "meta.options.sed", patterns: [include: "#flags"]
 			patterns: [{
-				name:  "meta.match-pattern.source.sed"
+				name:  "meta.match-pattern.sed"
 				begin: "\\G"
 				end:   "}|(?=$)"
-				contentName: "string.regexp.substitution.search.source.sed"
+				contentName: "string.regexp.substitution.search.sed"
 				endCaptures:
-					0: name: "punctuation.delimiter.pattern.middle.source.sed"
+					0: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#regexp"]
 			},{
-				name:  "meta.replacement.source.sed"
+				name:  "meta.replacement.sed"
 				begin: "(?<=})"
 				end:   "(?!\\G)(?=})|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				patterns: [include: "#replacement.innards"]
 			}, include: "#escape"]
 		},{
 			# Using a sane delimiter
-			name:  "meta.substitution.source.sed"
+			name:  "meta.substitution.sed"
 			begin: "s"
 			end:   "$|(?<=^)|(?=[;#}])"
 			beginCaptures:
-				0: name: "keyword.control.command.source.sed"
+				0: name: "keyword.control.command.sed"
 			patterns: [{
-				name:  "meta.match-pattern.source.sed"
+				name:  "meta.match-pattern.sed"
 				begin: "\\G(.)"
 				end:   "-?(?=\\1|$)"
-				contentName: "string.regexp.substitution.search.source.sed"
+				contentName: "string.regexp.substitution.search.sed"
 				beginCaptures:
-					1: name: "punctuation.delimiter.pattern.begin.source.sed"
+					1: name: "punctuation.delimiter.pattern.begin.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#regexp"]
 			},{
-				name:  "meta.replacement.source.sed"
+				name:  "meta.replacement.sed"
 				begin: "([^;#}])"
 				end:   "(\\1)([^;#}]*+)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				beginCaptures:
-					1: name: "punctuation.delimiter.pattern.middle.source.sed"
+					1: name: "punctuation.delimiter.pattern.middle.sed"
 				endCaptures:
-					1: name: "punctuation.delimiter.pattern.end.source.sed"
-					2: name: "meta.options.source.sed", patterns: [include: "#flags"]
+					1: name: "punctuation.delimiter.pattern.end.sed"
+					2: name: "meta.options.sed", patterns: [include: "#flags"]
 				patterns: [include: "#replacement.innards"]
 			}]
 		}]
 
 	"replacement.innards":
 		patterns: [
-			{match: "&", name: "variable.language.input.source.sed"}
+			{match: "&", name: "variable.language.input.sed"}
 			{include: "#reference"}
 			{include: "#escape"}
 		]
@@ -536,211 +536,211 @@ repository:
 	transliteration:
 		patterns: [{
 			# Idiotic/invalid use of whitespace delimiters
-			name:  "invalid.illegal.syntax.transliteration.source.sed"
+			name:  "invalid.illegal.syntax.transliteration.sed"
 			match: "y {2}[^ ]*(?: |$)|y\\t{2}[^\\t]*(?:\\t|$)"
 		},{
 			# Absurd delimiter #1: Space
-			name:  "meta.transliteration.space-delimiter.source.sed"
+			name:  "meta.transliteration.space-delimiter.sed"
 			begin: "(y)( )"
 			end:   "( )([^#;}]*)|$"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.whitespace.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.whitespace.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.whitespace.end.source.sed"
-				2: name: "invalid.illegal.extra-characters.source.sed"
+				1: name: "punctuation.delimiter.whitespace.end.sed"
+				2: name: "invalid.illegal.extra-characters.sed"
 			patterns: [{
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G"
 				end:   "(-)?( )|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					1: name: "string.quoted.double.source.sed"
-					2: name: "punctuation.delimiter.whitespace.middle.source.sed"
+					1: name: "string.quoted.double.sed"
+					2: name: "punctuation.delimiter.whitespace.middle.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(?<= )"
 				end:   "(?!\\G)-?(?= )|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}, include: "#escape"]
 		},{
 			# Absurd delimiter #2: Tab
-			name:  "meta.transliteration.tab-delimiter.source.sed"
+			name:  "meta.transliteration.tab-delimiter.sed"
 			begin: "(y)(\\t)"
 			end:   "(\\t)([^#;}]*)|$"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.whitespace.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.whitespace.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.whitespace.end.source.sed"
-				2: name: "invalid.illegal.extra-characters.source.sed"
+				1: name: "punctuation.delimiter.whitespace.end.sed"
+				2: name: "invalid.illegal.extra-characters.sed"
 			patterns: [{
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G"
 				end:   "(-)?(\\t)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					1: name: "string.quoted.double.source.sed"
-					2: name: "punctuation.delimiter.whitespace.middle.source.sed"
+					1: name: "string.quoted.double.sed"
+					2: name: "punctuation.delimiter.whitespace.middle.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(?<=\\t)"
 				end:   "(?!\\G)-?(?=\\t)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}, include: "#escape"]
 		},{
 			# Absurd delimiter #3: Semicolon
-			name:  "meta.transliteration.semicolon-delimiter.source.sed"
+			name:  "meta.transliteration.semicolon-delimiter.sed"
 			begin: "(y)(;)"
 			end:   "(;)([^#;}]*)|$"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "invalid.illegal.extra-characters.source.sed"
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "invalid.illegal.extra-characters.sed"
 			patterns: [{
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G"
 				end:   "(-)?(;)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					1: name: "string.quoted.double.source.sed"
-					2: name: "punctuation.delimiter.pattern.middle.source.sed"
+					1: name: "string.quoted.double.sed"
+					2: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(?<=;)"
 				end:   "(?!\\G)-?(?=;)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}, include: "#escape"]
 		},{
 			# Absurd delimiter #4: Closing brace
-			name:  "meta.transliteration.brace-delimiter.source.sed"
+			name:  "meta.transliteration.brace-delimiter.sed"
 			begin: "(y)(})"
 			end:   "(})([^#;}]*)|$"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "invalid.illegal.extra-characters.source.sed"
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "invalid.illegal.extra-characters.sed"
 			patterns: [{
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G"
 				end:   "(-)?(})|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					1: name: "string.quoted.double.source.sed"
-					2: name: "punctuation.delimiter.pattern.middle.source.sed"
+					1: name: "string.quoted.double.sed"
+					2: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(?<=})"
 				end:   "(?!\\G)-?(?=})|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}, include: "#escape"]
 		},{
 			# Absurd delimiter #5: Pounds/number-signs
-			name:  "meta.transliteration.pound-delimiter.source.sed"
+			name:  "meta.transliteration.pound-delimiter.sed"
 			begin: "(y)(#)"
 			end:   "(#)([^#;}]*)|$"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "invalid.illegal.extra-characters.source.sed"
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "invalid.illegal.extra-characters.sed"
 			patterns: [{
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G"
 				end:   "(-)?(#)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					1: name: "string.quoted.double.source.sed"
-					2: name: "punctuation.delimiter.pattern.middle.source.sed"
+					1: name: "string.quoted.double.sed"
+					2: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(?<=#)"
 				end:   "(?!\\G)-?(?=#)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}, include: "#escape"]
 		},{
 			# Absurd delimiter #6: Dash
-			name:  "meta.transliteration.dash-delimiter.source.sed"
+			name:  "meta.transliteration.dash-delimiter.sed"
 			begin: "(y)(-)"
 			end:   "(-)([^#;}]*)|$"
 			beginCaptures:
-				1: name: "keyword.control.command.source.sed"
-				2: name: "punctuation.delimiter.pattern.begin.source.sed"
+				1: name: "keyword.control.command.sed"
+				2: name: "punctuation.delimiter.pattern.begin.sed"
 			endCaptures:
-				1: name: "punctuation.delimiter.pattern.end.source.sed"
-				2: name: "invalid.illegal.extra-characters.source.sed"
+				1: name: "punctuation.delimiter.pattern.end.sed"
+				2: name: "invalid.illegal.extra-characters.sed"
 			patterns: [{
 				# First range
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G"
 				end:   "-|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				endCaptures:
-					0: name: "punctuation.delimiter.pattern.middle.source.sed"
+					0: name: "punctuation.delimiter.pattern.middle.sed"
 				patterns: [include: "#escape"]
 			},{
 				# Second range
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(?<=-)"
 				end:   "(?=$|-)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				patterns: [include: "#escape"]
 			}, include: "#escape"]
 		},{
 			# Using a sane delimiter
-			name:  "meta.transliteration.source.sed"
+			name:  "meta.transliteration.sed"
 			begin: "y"
 			end:   "$|(?=[\\s#;}])|(?<=^)"
 			beginCaptures:
-				0: name: "keyword.control.command.source.sed"
+				0: name: "keyword.control.command.sed"
 			patterns: [{
 				# First range
-				name:  "meta.source-characters.source.sed"
+				name:  "meta.source-characters.sed"
 				begin: "\\G(.)"
 				end:   "-?(?=\\1|$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				beginCaptures:
-					1: name: "punctuation.delimiter.pattern.begin.source.sed"
+					1: name: "punctuation.delimiter.pattern.begin.sed"
 				endCaptures:
-					0: name: "string.quoted.double.source.sed"
+					0: name: "string.quoted.double.sed"
 				patterns: [include: "#transliteration.ranges"]
 			},{
 				# Second range
-				name:  "meta.replacement-characters.source.sed"
+				name:  "meta.replacement-characters.sed"
 				begin: "(.)"
 				end:   "(-)?(\\1)([^#;}]*+)|(?=$)"
-				contentName: "string.quoted.double.source.sed"
+				contentName: "string.quoted.double.sed"
 				beginCaptures:
-					1: name: "punctuation.delimiter.pattern.middle.source.sed"
+					1: name: "punctuation.delimiter.pattern.middle.sed"
 				endCaptures:
-					1: name: "string.quoted.double.source.sed"
-					2: name: "punctuation.delimiter.pattern.end.source.sed"
-					3: name: "invalid.illegal.extra-characters.source.sed"
+					1: name: "string.quoted.double.sed"
+					2: name: "punctuation.delimiter.pattern.end.sed"
+					3: name: "invalid.illegal.extra-characters.sed"
 				patterns: [include: "#transliteration.ranges"]
 			}]
 		}]
@@ -748,7 +748,7 @@ repository:
 	"transliteration.ranges":
 		patterns: [
 			{match: "\\G-"}
-			{match: "-", name: "keyword.operator.range.dash.source.sed"}
+			{match: "-", name: "keyword.operator.range.dash.sed"}
 			{include: "#escape"}
 		]
 
@@ -757,22 +757,22 @@ repository:
 	flags:
 		patterns: [
 			# Standard flags
-			{match: "g",      name: "keyword.operator.modifier.global.source.sed"}
-			{match: "p",      name: "keyword.operator.modifier.print.source.sed"}
-			{match: "[0-9]+", name: "keyword.operator.modifier.limit-match.source.sed"}
+			{match: "g",      name: "keyword.operator.modifier.global.sed"}
+			{match: "p",      name: "keyword.operator.modifier.print.sed"}
+			{match: "[0-9]+", name: "keyword.operator.modifier.limit-match.sed"}
 			
 			# Write output to file
 			match: "(w)\\s*([^;#}]*)"
 			captures:
-				1: name: "keyword.operator.modifier.write.file.source.sed"
-				2: name: "string.unquoted.filename.source.sed"
+				1: name: "keyword.operator.modifier.write.file.sed"
+				2: name: "string.unquoted.filename.sed"
 			
 			# GNU extensions
-			{match: "e",      name: "keyword.operator.modifier.exec-shell.gnu.source.sed"}
-			{match: "I|i",    name: "keyword.operator.modifier.ignore-case.gnu.source.sed"}
-			{match: "M|m",    name: "keyword.operator.modifier.multi-line.gnu.source.sed"}
+			{match: "e",      name: "keyword.operator.modifier.exec-shell.gnu.sed"}
+			{match: "I|i",    name: "keyword.operator.modifier.ignore-case.gnu.sed"}
+			{match: "M|m",    name: "keyword.operator.modifier.multi-line.gnu.sed"}
 			
 			# Mark everything else as an error unless it's a valid terminal
-			name: "invalid.illegal.unknown.flag.source.sed"
+			name: "invalid.illegal.unknown.flag.sed"
 			match: "[^;\\s#}gp0-9eIiMm]+"
 		]
