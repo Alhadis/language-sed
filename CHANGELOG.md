@@ -9,6 +9,7 @@ This project honours [Semantic Versioning](http://semver.org).
 [Staged]
 ------------------------------------------------------------------------
 * Added this change-log
+* Fixed incorrect highlighting of `/[^]]/`
 * Fixed [various inaccuracies][1] related to modeline matching
 * Sed tokens are no longer scoped with `source`
 
