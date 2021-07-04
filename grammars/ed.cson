@@ -1,0 +1,586 @@
+name: "ed"
+scopeName: "source.ed"
+fileTypes: ["ed"]
+firstLineMatch: """(?xi)
+	# Hashbang
+	^\\#!.*(?:\\s|\\/|(?<=!)\\b)
+		ed
+	(?:$|\\s)
+	|
+	# Modeline
+	(?:
+		# Emacs
+		-\\*-(?i:[ \\t]*(?=[^:;\\s]+[ \\t]*-\\*-)|(?:.*?[ \\t;]|(?<=-\\*-))[ \\t]*mode[ \\t]*:[ \\t]*)
+			ed
+		(?=[ \\t;]|(?<![-*])-\\*-).*?-\\*-
+		|
+		# Vim
+		(?:(?:^|[ \\t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \\t]ex)(?=:(?=[ \\t]*set?[ \\t][^\\r\\n:]+:)|:(?![ \\t]*set?[ \\t]))
+		(?:(?:[ \\t]*:[ \\t]*|[ \\t])\\w*(?:[ \\t]*=(?:[^\\\\\\s]|\\\\.)*)?)*[ \\t:]
+		(?:filetype|ft|syntax)[ \\t]*=
+			ed
+		(?=$|\\s|:)
+	)
+"""
+injections:
+	# Inhibit line continuations outside of command lists
+	"L:source.ed - meta.command-list":
+		patterns: [match: "([=HPQdhjlnpqux]|k.|[mtz].*?)[pln]*(?=\\\\$)"]
+
+patterns: [
+	# Interpreter directive
+	name:  "comment.line.number-sign.hashbang.source.ed"
+	begin: "\\A#!"
+	end:   "$"
+	beginCaptures:
+		0: name: "punctuation.definition.comment.source.ed"
+	
+	# Remainder of grammar
+	{include: "#main"}
+]
+
+repository:
+	main:
+		patterns: [
+			{include: "#command"}
+			{include: "#address"}
+			{include: "#comma"}
+		]
+
+
+	# Stuff that specifies a line (or range of lines) to operate upon
+	address:
+		patterns: [{
+			# Basic (non-pattern) addresses
+			match: "(?:\\G|^|(?<=[,mt]))[ \\t]*(?:(\\.)|(\\$)|([-^])|(\\+)|([,%])|(;)|(\\d+)|([-^]\\d+)|(\\+\\d+)|((')[a-z]))"
+			captures:
+				1:  name: "variable.language.address.current-line.ed"
+				2:  name: "variable.language.address.last-line.ed"
+				3:  name: "variable.language.address.previous-line.ed"
+				4:  name: "variable.language.address.next-line.ed"
+				5:  name: "variable.language.address.range.first-to-last.ed"
+				6:  name: "variable.language.address.range.current-to-last.ed"
+				7:  name: "constant.numeric.line-index.address.nth-line.ed"
+				8:  name: "constant.numeric.line-index.address.nth-previous-line.ed"
+				9:  name: "constant.numeric.line-index.address.nth-next-line.ed"
+				10: name: "variable.address.marked-line.ed"
+				11: name: "punctuation.definition.variable.marked-line.ed"		
+		},{
+			# // — Repeat last search (forwards)
+			name:  "meta.address.pattern.search-forward.repeat-last.ed"
+			match: "(?:\\G|^|(?<=,))[ \\t]*(//|/$)"
+			captures:
+				1: name: "punctuation.delimiter.pattern.empty.ed"
+		},{
+			# /re/ — Search forwards for regular expression `re`
+			name:  "meta.address.pattern.search-forward.ed"
+			begin: "(?:\\G|^|(?<=,))[ \\t]*(/)"
+			end:   "/|(?=$)"
+			beginCaptures: 1: name: "punctuation.delimiter.pattern.begin.ed"
+			endCaptures:   0: name: "punctuation.delimiter.pattern.end.ed"
+			contentName: "string.regexp.address.ed"
+			patterns: [include: "#regexp"]
+		},{
+			# ?? — Repeat last search (backwards)
+			name:  "meta.address.pattern.search-backward.repeat-last.ed"
+			match: "(?:\\G|^|(?<=,))[ \\t]*(\\?\\?|\\?$)"
+			captures:
+				1: name: "punctuation.delimiter.pattern.empty.ed"
+		},{
+			# ?re? — Search backwards for regular expression `re`
+			name:  "meta.address.pattern.search-backward.ed"
+			begin: "(?:\\G|^|(?<=,))[ \\t]*(\\?)"
+			end:   "\\?|(?=$)"
+			beginCaptures: 1: name: "punctuation.delimiter.pattern.begin.ed"
+			endCaptures:   0: name: "punctuation.delimiter.pattern.end.ed"
+			contentName: "string.regexp.address.ed"
+			patterns: [include: "#regexp"]
+		}]
+
+
+	# Comma separating two halves of an address range
+	comma:
+		name: "punctuation.separator.range.address.comma.ed"
+		match: ","
+
+
+	# Single-letter commands for doing stuff
+	command:
+		patterns: [{
+			# (.)a — Append text to addressed line
+			name:  "meta.command.append-text.ed"
+			begin: "(a)([pln]*)$"
+			end:   "(?!\\G)"
+			beginCaptures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+			patterns: [include: "#inputMode"]
+		},{
+			# (.,.)c — Change addressed lines
+			name:  "meta.command.change-lines.ed"
+			begin: "(c)([pln]*)$"
+			end:   "(?!\\G)"
+			beginCaptures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+			patterns: [include: "#inputMode"]
+		},{
+			# (.,.)d — Delete addressed lines
+			name:  "meta.command.delete-lines.ed"
+			match: "(d)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# e ![command] — “Edit” the output of a shell command
+			name:  "meta.command.edit-command-output.ed"
+			match: "(e)[ \\t]+(!.*?)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#shell"]
+		},{
+			# e [filename] — Open file and set default filename
+			name:  "meta.command.edit-file.ed"
+			begin: "(e)(?=\\s|$)[ \\t]*(?!!)"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# E [filename] — Discard unsaved changes and open file
+			name:  "meta.command.edit-file.discard-unsaved-changes.ed"
+			begin: "(E)(?=\\s|$)[ \\t]*(?!!)"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# f [filename] — Set default filename
+			name:  "meta.command.set-default-filename.ed"
+			begin: "(f)(?=\\s|$)[ \\t]*"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# (1,$)g/[re]/[commands] — Execute commands for each matching line
+			name:  "meta.command.conditional.ed"
+			begin: "g(?=/)"
+			end:   "(?<!\\\\)$"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			patterns: [include: "#commandList"]
+		},{
+			# (1,$)G/re/ — Edit matching lines interactively
+			name:  "meta.command.conditional.edit-interactively.ed"
+			begin: "G(?=/)"
+			end:   "(?<!\\\\)$"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			patterns: [include: "#commandList"]
+		},{
+			# H — Toggle error reporting
+			name:  "meta.command.toggle-error-reporting.ed"
+			match: "(H)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# h — Print an explanation of the most recent error
+			name:  "meta.command.print-error-info.ed"
+			match: "(h)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# (.)i — Insert text before addressed line
+			name:  "meta.command.insert-text.ed"
+			begin: "(i)([pln]*)$"
+			end:   "(?!\\G)"
+			beginCaptures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+			patterns: [include: "#inputMode"]
+		},{
+			# (.,+)j — Join addressed lines
+			name:  "meta.command.join-lines.ed"
+			match: "(j)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# (.)k… — Mark addressed line with a label for future retrieval
+			name:  "meta.command.mark-line.ed"
+			match: "(k)(?:([a-z])|([^a-z]))([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "storage.type.mark.ed"
+				2: name: "entity.name.mark.ed"
+				3: name: "invalid.illegal.not-lowercase.ed"
+				4: patterns: [include: "#printSuffix"]
+		},{
+			# (.,.)l — Print addressed lines unambiguously
+			name:  "meta.command.print-lines-unambiguously.ed"
+			match: "(l)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# (.,.)m(.) — Move addressed lines
+			name:  "meta.command.move-lines.ed"
+			match: "(m)(.*?)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#address"]
+				3: patterns: [include: "#printSuffix"]
+		},{
+			# (.,.)n — Print addressed lines with line-numbers prepended
+			name:  "meta.command.print-numbered-lines.ed"
+			match: "(n)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# (.,.)p — Print addressed lines
+			name:  "meta.command.print-lines.ed"
+			match: "(p)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# P — Toggle command prompt
+			name:  "meta.command.toggle-prompt.ed"
+			match: "(P)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# q — Quit
+			name:  "meta.command.quit.ed"
+			match: "(q)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# Q — Discard unsaved changes and quit
+			name:  "meta.command.quit.discard-unsaved-changes.ed"
+			match: "(Q)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# ($)r ![command] — Read output of command up until addressed line
+			name:  "meta.command.read-command-output.ed"
+			match: "(r)[ \\t]+(!.*?)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#shell"]
+		},{
+			# ($)r [filename] — Read file up until addressed line
+			name:  "meta.command.read-file.ed"
+			begin: "(r)(?=\\s|$)[ \\t]*(?!!)"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# (.,.)s/[search]/[replace]/ — Substitute text
+			name:  "meta.substitution.ed"
+			begin: "s"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			patterns: [include: "#substitution"]
+		},{
+			# (.,.)t(.) — Copy/transfer addressed lines to right-hand address
+			name:  "meta.command.copy-lines.ed"
+			begin: "t"
+			end:   "([pln]*)(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			endCaptures:
+				1: patterns: [include: "#printSuffix"]
+			patterns: [include: "#address"]
+		},{
+			# u — Undo last command
+			name:  "meta.command.undo.ed"
+			match: "(u)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# (1,$)v/[re]/[commands] — Inverse of `g`
+			name:  "meta.command.conditional.inverted.ed"
+			begin: "v(?=/)"
+			end:   "(?<!\\\\)$"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			patterns: [include: "#commandList"]
+		},{
+			# (1,$)V/[re]/ — Inverse of `G`
+			name:  "meta.command.conditional.edit-interactively.inverted.ed"
+			begin: "V(?=/)"
+			end:   "(?<!\\\\)$"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			patterns: [include: "#commandList"]
+		},{
+			# (1,$)w ![command] — Write addressed lines to a command's standard input
+			name:  "meta.command.write-lines-to-command.ed"
+			match: "(w)[ \\t]+(!.*?)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#shell"]
+		},{
+			# (1,$)w [file] — Write addressed lines to file
+			name:  "meta.command.write-lines-to-file.ed"
+			begin: "(w)(?=\\s|$)[ \\t]*(?!!)"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# (1,$)wq [file] — Same as `w` followed by a `q` command
+			name:  "meta.command.write-lines-to-file.quit.ed"
+			begin: "(wq)(?=\\s|$)[ \\t]*(?!!)"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# (1,$)W [file] — Append lines to file
+			name:  "meta.command.append-lines-to-file.ed"
+			begin: "(W)(?=\\s|$)[ \\t]*"
+			end:   "(?=\\\\?$)"
+			beginCaptures:
+				0: name: "keyword.control.command.ed"
+			contentName: "constant.other.filename.path.ed"
+		},{
+			# x — Prompt for an encryption key
+			name:  "meta.command.set-encryption-key.ed"
+			match: "(x)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# (+)z𝑁 — Scroll 𝑁 lines from addressed position
+			name:  "meta.command.scroll.ed"
+			match: "(z)(\\d+)?([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: name: "constant.numeric.integer.int.line-count.ed"
+				3: patterns: [include: "#printSuffix"]
+		},{
+			# ($)= — Print line-number of addressed line
+			name:  "meta.command.print-line-number.ed"
+			match: "(=)([pln]*)(?=\\\\?$)"
+			captures:
+				1: name: "keyword.control.command.ed"
+				2: patterns: [include: "#printSuffix"]
+		},{
+			# ![command] — Execute command via sh(1)
+			name:  "meta.command.shell.ed"
+			match: "(!.*?)(?=\\\\?$)"
+			captures:
+				1: patterns: [include: "#shell"]
+		}]
+
+
+	# Newline-separated list of commands following a regex
+	commandList:
+		patterns: [{
+			name:  "meta.pattern.ed"
+			begin: "\\G/"
+			end:   "(?=/|$)"
+			beginCaptures:
+				0: name: "punctuation.delimiter.pattern.begin.ed"
+			contentName: "string.regexp.search.ed"
+			patterns: [include: "#regexp"]
+		},{
+			contentName: "meta.command-list.ed"
+			begin: "(?!\\G)(/)"
+			end:   "(?=(?<!\\\\)$)"
+			beginCaptures:
+				0: name: "meta.pattern.ed"
+				1: name: "punctuation.delimiter.pattern.end.ed"
+			patterns: [include: "#escapedNewline", {
+				# a\ — Append text to matching lines
+				name:  "meta.command.append-text.ed"
+				begin: "(a)([pln]*)(\\\\)$"
+				end:   "^(\\.)(?=\\\\?$)|^(?!\\.)(.*)(?<!\\\\)$"
+				beginCaptures:
+					1: name: "keyword.control.command.ed"
+					2: patterns: [include: "#printSuffix"]
+					3: patterns: [include: "#escapedNewline"]
+				endCaptures:
+					1: patterns: [include: "#inputTerminator"]
+					2: name: "string.unquoted.user-input.ed"
+				contentName: "string.unquoted.user-input.ed"
+				patterns: [include: "#escapedNewline"]
+			},{
+				# c\ — Replace matched lines
+				name:  "meta.command.change-lines.ed"
+				begin: "(c)([pln]*)(\\\\)$\\R?"
+				end:   "^(\\.)(?=\\\\?$)|^(?!\\.)(.*)(?<!\\\\)$"
+				beginCaptures:
+					1: name: "keyword.control.command.ed"
+					2: patterns: [include: "#printSuffix"]
+					3: patterns: [include: "#escapedNewline"]
+				endCaptures:
+					1: patterns: [include: "#inputTerminator"]
+					2: name: "string.unquoted.user-input.ed"
+				contentName: "string.unquoted.user-input.ed"
+				patterns: [include: "#escapedNewline"]
+			},{
+				# i\ — Insert text before each matching line
+				name:  "meta.command.insert-text.ed"
+				begin: "(i)([pln]*)(\\\\)$\\R?"
+				end:   "^(\\.)(?=\\\\?$)|^(?!\\.)(.*)(?<!\\\\)$"
+				beginCaptures:
+					1: name: "keyword.control.command.ed"
+					2: patterns: [include: "#printSuffix"]
+					3: patterns: [include: "#escapedNewline"]
+				endCaptures:
+					1: patterns: [include: "#inputTerminator"]
+					2: name: "string.unquoted.user-input.ed"
+				contentName: "string.unquoted.user-input.ed"
+				patterns: [include: "#escapedNewline"]
+			},{
+				# Nested command lists aren't supported
+				name:  "invalid.illegal.nested-command.ed"
+				match: "g|v|G|V"
+			}, include: "#command"]
+		}]
+
+
+	# Line continuation
+	escapedNewline:
+		name:  "constant.character.escape.newline.ed"
+		begin: "\\\\$(?!R)\\R?"
+		end:   "^"
+
+
+	# Lines of user-supplied input
+	inputMode:
+		name:  "string.unquoted.user-input.ed"
+		begin: "\\G"
+		end:   "^(\\.)$"
+		endCaptures:
+			1: patterns: [include: "#inputTerminator"]
+
+
+	# Dot that terminates input mode
+	inputTerminator:
+		name: "keyword.control.end-input.ed"
+		match: "\\."
+		captures:
+			0: name: "punctuation.terminator.period.dot.full-stop.ed"
+
+
+	# A single-letter command tacked onto the end of another command
+	printSuffix:
+		patterns: [
+			{match: "p", name: "keyword.control.print-suffix.print.ed"}
+			{match: "l", name: "keyword.control.print-suffix.list.ed"}
+			{match: "n", name: "keyword.control.print-suffix.enumerate.ed"}
+		]
+
+
+	# Stuff matched inside a regular expression
+	regexp:
+		patterns: [
+			{match: "\\.",        name: "constant.language.wildcard.dot.match.any.ed"}
+			{match: "\\^",        name: "constant.language.anchor.line-start.ed"}
+			{match: "\\$",        name: "constant.language.anchor.line-end.ed"}
+			{match: "\\\\<",      name: "constant.language.anchor.word-start.ed"}
+			{match: "\\\\>",      name: "constant.language.anchor.word-end.ed"}
+			{match: "(?!\\G)\\*", name: "constant.language.quantifier.min-0.ed"}
+			{include: "source.sed#regexp.bracketExpression"}
+			{include: "#escapedNewline"}
+			{
+				# \(Sub–expression\)
+				name:  "meta.subexpression.ed"
+				begin: "\\\\\\("
+				end:   "\\\\\\)|(?=(?<!\\\\)$)"
+				beginCaptures: 0: name: "punctuation.definition.subexpression.begin.ed"
+				endCaptures:   0: name: "punctuation.definition.subexpression.end.ed"
+				patterns: [include: "#regexp"]
+			},{
+				# \{n,m\} — Quantifier
+				name:  "meta.quantifier.specific-range.ed"
+				match: "(\\\\{)(\\d+)(?:(,)(\\d+)?)?(\\\\})"
+				captures:
+					1: name: "punctuation.definition.quantifier.bracket.curly.begin.ed"
+					2: name: "constant.numeric.integer.ed"
+					3: name: "punctuation.separator.range.comma.ed"
+					4: name: "constant.numeric.integer.ed"
+					5: name: "punctuation.definition.quantifier.bracket.curly.end.ed"
+			},{
+				# \c — Match the literal character `c`
+				name:  "constant.character.escape.literal.ed"
+				match: "(\\\\)."
+				captures:
+					1: name: "punctuation.definition.escape.backslash.ed"
+			}
+		]
+
+
+	# An exclamation mark, followed by a command to execute in one's shell
+	shell:
+		name:  "meta.shell-command.ed"
+		match: "(?:\\G|^)(!)(!?)(.*)"
+		captures:
+			1: name: "keyword.operator.shell-command.ed"
+			2: name: "constant.language.previous-command-text.ed"
+			3: name: "source.embedded.shell", patterns: [include: "source.shell"]
+
+
+	# /…/…/
+	substitution:
+		patterns: [{
+			# s/…
+			name:  "meta.match-pattern.ed"
+			begin: "\\G([^ ])"
+			end:   "(?=\\1|(?<!\\\\)$)"
+			contentName: "string.regexp.substitution.search.ed"
+			beginCaptures:
+				1: name: "punctuation.delimiter.pattern.begin.ed"
+			patterns: [include: "#regexp"]
+		},{
+			# …/%/
+			name:  "meta.replacement.ed"
+			match: "([^ ])(%)(?:(\\1)([rgp\\d]*+)(.+?)?(?=(?<!\\\\)$)|(?=(?<!\\\\)$))"
+			captures:
+				1: name: "punctuation.delimiter.pattern.middle.ed"
+				2: name: "constant.language.last-substitution.ed"
+				3: name: "punctuation.delimiter.pattern.end.ed"
+				4: patterns: [include: "#substitutionFlags"]
+				5: name: "invalid.illegal.unexpected-characters.ed"
+		},{
+			# …/…/
+			name:  "meta.replacement.ed"
+			begin: "([^ ])"
+			end:   "(\\1)([rgp\\d]*+)(.*)|(?=(?<!\\\\)$)"
+			contentName: "string.quoted.double.ed"
+			beginCaptures:
+				1: name: "punctuation.delimiter.pattern.middle.ed"
+			endCaptures:
+				1: name: "punctuation.delimiter.pattern.end.ed"
+				2: patterns: [include: "#substitutionFlags"]
+				3: name: "invalid.illegal.unexpected-characters.ed"
+			patterns: [
+				{match: "&",         name: "variable.language.input.ed"}
+				{match: "\\\\[0-9]", name: "variable.language.reference.ed"}
+				{match: "\\\\.",     name: "constant.character.escape.ed"}
+				{include: "#escapedNewline"}
+			]
+		}]
+
+
+	# Suffixes following the closing delimiter of a substitution pattern
+	substitutionFlags:
+		patterns: [
+			{match: "r",    name: "keyword.operator.modifier.repeat-last-search.ed"}
+			{match: "g",    name: "keyword.operator.modifier.replace-all.ed"}
+			{match: "p",    name: "keyword.operator.modifier.print.ed"}
+			{match: "\\d+", name: "keyword.operator.modifier.replace-nth.ed"}
+		]

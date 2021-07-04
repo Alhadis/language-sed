@@ -9,11 +9,13 @@ This project honours [Semantic Versioning](http://semver.org).
 [Staged]
 ------------------------------------------------------------------------
 * Added this change-log
+* Added grammar for [`ed(1)`][2] commands
 * Fixed incorrect highlighting of `/[^]]/`
 * Fixed [various inaccuracies][1] related to modeline matching
 * Sed tokens are no longer scoped with `source`
 
 [1]: https://github.com/github/linguist/pull/5271
+[2]: https://man.openbsd.org/ed
 
 
 [v1.0.0]

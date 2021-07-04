@@ -1,0 +1,59 @@
+.a
+Appended text
+.
+1,3c
+Replace first, second, and
+third lines with this text.
+.
+1,3dp
+e !echo "$SHELL commands, etc"
+e !!
+e /path/to/the file/to/edit.txt
+E Same as above.txt
+f File name
+1,$g/re/i\
+Prepended text\
+.\
+p\
+H
+1,$G/^\(*re\)\{0,1\}$/p\
+H\
+i\
+[Inserted text]\
+.
+1,2j
+.kl
+1,2l
+1,2m
+1,2n
+1,2p
+P
+q
+Q
+$r /path/to/some file.txt
+$r !echo "More $SHELL commands"
+s/search/%/p
+s/search/\%/p
+1,2s/re/replacement/
+1,2s/re/replacement/g
+1,2s/re/replacement/1
+1,2s'r\
+e'replace\
+ment'g
+1,2s
+1,2t.
+u
+1,2v/re/i\
+[Inserted text]\
+.
+1,2V/re/
+1,2W Unclobbered file.txt
+1,2w !echo "More $SHELL commands"
+1,2w /path/to/write/lines.to
+1,2wq Save as above.txt
+x
+$z1
+$=
+
+!echo "One more $SHELL command."
+!!
